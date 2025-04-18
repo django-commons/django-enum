@@ -4,11 +4,16 @@
 Change Log
 ==========
 
+v2.2.2 (2025-04-18)
+===================
+
+* Minor doc fixes.
+
 v2.2.1 (2025-04-18)
 ===================
 
-* First release under `django-commons <https://github.com/django-commons>` ownership!
-* Fix all links to reflect new home @ `django-commons <https://github.com/django-commons>`
+* First release under `django-commons <https://github.com/django-commons>`_ ownership!
+* Fix all links to reflect new home @ `django-commons <https://github.com/django-commons>`_
 
 v2.2.0 (2025-03-28)
 ===================

@@ -16,7 +16,7 @@ from django_enum.fields import EnumField
 
 __all__ = ["EnumField"]
 
-VERSION = (2, 2, 1)
+VERSION = (2, 2, 2)
 
 __title__ = "Django Enum"
 __version__ = ".".join(str(i) for i in VERSION)
