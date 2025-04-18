@@ -31,14 +31,14 @@ Django Enum
 .. |Documentation Status| image:: https://readthedocs.org/projects/django-enum/badge/?version=latest
    :target: http://django-enum.readthedocs.io/?badge=latest/
 
-.. |Code Cov| image:: https://codecov.io/gh/bckohan/django-enum/branch/main/graph/badge.svg?token=0IZOKN2DYL
-   :target: https://codecov.io/gh/bckohan/django-enum
+.. |Code Cov| image:: https://codecov.io/gh/django-commons/django-enum/branch/main/graph/badge.svg?token=0IZOKN2DYL
+   :target: https://codecov.io/gh/django-commons/django-enum
 
-.. |Test Status| image:: https://github.com/bckohan/django-enum/workflows/test/badge.svg
-   :target: https://github.com/bckohan/django-enum/actions/workflows/test.yml
+.. |Test Status| image:: https://github.com/django-commons/django-enum/workflows/test/badge.svg
+   :target: https://github.com/django-commons/django-enum/actions/workflows/test.yml
 
-.. |Lint Status| image:: https://github.com/bckohan/django-enum/workflows/lint/badge.svg
-   :target: https://github.com/bckohan/django-enum/actions/workflows/lint.yml
+.. |Lint Status| image:: https://github.com/django-commons/django-enum/workflows/lint/badge.svg
+   :target: https://github.com/django-commons/django-enum/actions/workflows/lint.yml
 
 .. |Django Packages| image:: https://img.shields.io/badge/Published%20on-Django%20Packages-0c3c26
     :target: https://djangopackages.org/packages/p/django-enum/
@@ -197,7 +197,7 @@ well as psycopg3_ and psycopg2_. The other RDBMS supported by Django_ are also t
 SQLite_, MySQL_, MariaDB_ and Oracle_. For these RDBMS (with the exception of Oracle_), tests are
 run against the minimum and maximum supported version combinations to maximize coverage breadth.
 
-**See the** `latest test runs <https://github.com/bckohan/django-enum/actions/workflows/test.yml>`_
+**See the** `latest test runs <https://github.com/django-commons/django-enum/actions/workflows/test.yml>`_
 **for our current test matrix**
 
 .. note::
@@ -212,9 +212,9 @@ Consider using :doc:`django-render-static <django-render-static:index>` to make 
 DRY_ across the full stack!
 
 Please report bugs and discuss features on the
-`issues page <https://github.com/bckohan/django-enum/issues>`_.
+`issues page <https://github.com/django-commons/django-enum/issues>`_.
 
-`Contributions <https://github.com/bckohan/django-enum/blob/main/CONTRIBUTING.md>`_ are encouraged!
+`Contributions <https://github.com/django-commons/django-enum/blob/main/CONTRIBUTING.md>`_ are encouraged!
 
 
 .. toctree::

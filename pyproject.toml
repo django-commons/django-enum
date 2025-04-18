@@ -8,7 +8,7 @@ authors = [
 ]
 license = "MIT"
 license-files = [ "LICENSE" ]
-repository = "https://github.com/bckohan/django-enum"
+repository = "https://github.com/django-commons/django-enum"
 homepage = "https://django-enum.rtfd.io"
 readme = "README.md"
 keywords = [
@@ -69,10 +69,10 @@ rest = ["djangorestframework>=3.9,<4.0"]
 [project.urls]
 "Homepage" = "https://django-enum.readthedocs.io"
 "Documentation" = "https://django-enum.readthedocs.io"
-"Repository" = "https://github.com/bckohan/django-enum"
-"Issues" = "https://github.com/bckohan/django-enum/issues"
+"Repository" = "https://github.com/django-commons/django-enum"
+"Issues" = "https://github.com/django-commons/django-enum/issues"
 "Changelog" = "https://django-enum.readthedocs.io/en/latest/changelog.html"
-"Code_of_Conduct" = "https://github.com/bckohan/membership/blob/main/CODE_OF_CONDUCT.md"
+"Code_of_Conduct" = "https://github.com/django-commons/django-enum/blob/main/CODE_OF_CONDUCT.md"
 
 
 [dependency-groups]

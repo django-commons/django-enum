@@ -7,7 +7,7 @@ from django_enum.utils import choices
 
 class TestNameOverride(TestCase):
     """
-    https://github.com/bckohan/django-enum/issues/77
+    https://github.com/django-commons/django-enum/issues/77
     """
 
     def test_name_override(self):

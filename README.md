@@ -7,9 +7,9 @@
 [![PyPI djversions](https://img.shields.io/pypi/djversions/django-enum.svg)](https://pypi.org/project/django-enum/)
 [![PyPI status](https://img.shields.io/pypi/status/django-enum.svg)](https://pypi.python.org/pypi/django-enum)
 [![Documentation Status](https://readthedocs.org/projects/django-enum/badge/?version=latest)](http://django-enum.readthedocs.io/?badge=latest/)
-[![Code Cov](https://codecov.io/gh/bckohan/django-enum/branch/main/graph/badge.svg?token=0IZOKN2DYL)](https://codecov.io/gh/bckohan/django-enum)
-[![Test Status](https://github.com/bckohan/django-enum/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/bckohan/django-enum/actions/workflows/test.yml?query=branch:main)
-[![Lint Status](https://github.com/bckohan/django-enum/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/bckohan/django-enum/actions/workflows/lint.yml?query=branch:main)
+[![Code Cov](https://codecov.io/gh/django-commons/django-enum/branch/main/graph/badge.svg?token=0IZOKN2DYL)](https://codecov.io/gh/django-commons/django-enum)
+[![Test Status](https://github.com/django-commons/django-enum/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/django-commons/django-enum/actions/workflows/test.yml?query=branch:main)
+[![Lint Status](https://github.com/django-commons/django-enum/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/django-commons/django-enum/actions/workflows/lint.yml?query=branch:main)
 [![Published on Django Packages](https://img.shields.io/badge/Published%20on-Django%20Packages-0c3c26)](https://djangopackages.org/packages/p/django-enum/)
 
 ---------------------------------------------------------------------------------------------------
@@ -194,7 +194,7 @@ class Color(TextChoices):
 
 ## Installation
 
-1. Clone django-enum from [GitHub](https://github.com/bckohan/django-enum) or install a release off [pypi](https://pypi.org/project/django-enum):
+1. Clone django-enum from [GitHub](https://github.com/django-commons/django-enum) or install a release off [pypi](https://pypi.org/project/django-enum):
 
 ```bash
    pip install django-enum
@@ -221,7 +221,7 @@ class Color(TextChoices):
 
 Like with [Django](https://www.djangoproject.com), [PostgreSQL](https://www.postgresql.org) is the preferred database for support. The full test suite is run against all combinations of currently supported versions of [Django](https://www.djangoproject.com), [Python](https://www.python.org), and [PostgreSQL](https://www.postgresql.org) as well as [psycopg3](https://pypi.org/project/psycopg) and [psycopg2](https://pypi.org/project/psycopg2). The other RDBMS supported by [Django](https://www.djangoproject.com) are also tested including [SQLite](https://www.sqlite.org), [MySQL](https://www.mysql.com), [MariaDB](https://mariadb.org) and [Oracle](https://www.oracle.com/database). For these RDBMS (with the exception of [Oracle](https://www.oracle.com/database), tests are run against the minimum and maximum supported version combinations to maximize coverage breadth.
 
-**See the [latest test runs](https://github.com/bckohan/django-enum/actions/workflows/test.yml) for our current test matrix**
+**See the [latest test runs](https://github.com/django-commons/django-enum/actions/workflows/test.yml) for our current test matrix**
 
 For [Oracle](https://www.oracle.com/database), only the latest version of the free database is tested against the minimum and maximum supported versions of Python, Django and the [cx-Oracle](https://pypi.org/project/cx-Oracle) driver.
 
@@ -229,8 +229,8 @@ For [Oracle](https://www.oracle.com/database), only the latest version of the fr
 
 Consider using [django-render-static](https://pypi.org/project/django-render-static) to make your enumerations [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) across the full stack!
 
-Please report bugs and discuss features on the [issues page](https://github.com/bckohan/django-enum/issues).
+Please report bugs and discuss features on the [issues page](https://github.com/django-commons/django-enum/issues).
 
-[Contributions](https://github.com/bckohan/django-enum/blob/main/CONTRIBUTING.md) are encouraged!
+[Contributions](https://github.com/django-commons/django-enum/blob/main/CONTRIBUTING.md) are encouraged!
 
 [Full documentation at read the docs.](https://django-enum.readthedocs.io)

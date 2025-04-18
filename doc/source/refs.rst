@@ -1,6 +1,6 @@
 .. _Python: https://www.python.org
 .. _Django: https://www.djangoproject.com
-.. _GitHub: https://github.com/bckohan/django-enum
+.. _GitHub: https://github.com/django-commons/django-enum
 .. _PyPI: https://pypi.python.org/pypi/django-enum
 .. _PEP435: https://peps.python.org/pep-0435
 .. _DRY: https://en.wikipedia.org/wiki/Don%27t_repeat_yourself
