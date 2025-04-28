@@ -398,3 +398,61 @@ class GNSSConstellation(IntFlag):
     GALILEO = 1 << 2
     BEIDOU = 1 << 3
     QZSS = 1 << 4
+
+
+class NestStatusBasic(Enum):
+    INIT = "INIT"
+    LOADED = "LOADED"
+    ACTIVE = "ACTIVE"
+    DONE = "DONE"
+    REJECTED = "REJECTED"
+    CANCELLED = "CANCELLED"
+
+    def __hash__(self):
+        return hash(self.value)
+
+    def __eq__(self, value) -> bool:
+        if isinstance(value, self.__class__):
+            return self.value == value.value
+        try:
+            return self.value == self.__class__(value).value
+        except (ValueError, TypeError):
+            return False
+
+
+class NestStatusStr(str, Enum):
+    INIT = "INIT"
+    LOADED = "LOADED"
+    ACTIVE = "ACTIVE"
+    DONE = "DONE"
+    REJECTED = "REJECTED"
+    CANCELLED = "CANCELLED"
+
+
+class NestStatusBasicInt(Enum):
+    INIT = 0
+    LOADED = 1
+    ACTIVE = 2
+    DONE = 3
+    REJECTED = 4
+    CANCELLED = 5
+
+    def __hash__(self):
+        return hash(self.value)
+
+    def __eq__(self, value) -> bool:
+        if isinstance(value, self.__class__):
+            return self.value == value.value
+        try:
+            return self.value == self.__class__(value).value
+        except (ValueError, TypeError):
+            return False
+
+
+class NestStatusInt(int, Enum):
+    INIT = 0
+    LOADED = 1
+    ACTIVE = 2
+    DONE = 3
+    REJECTED = 4
+    CANCELLED = 5

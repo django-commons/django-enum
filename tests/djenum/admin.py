@@ -27,7 +27,14 @@ admin.site.register(NullableStrFormTester)
 
 
 class AdminDisplayBug35Admin(admin.ModelAdmin):
-    list_display = ("text_enum", "int_enum")
+    list_display = (
+        "text_enum",
+        "int_enum",
+        "status_basic",
+        "status_basic_int",
+        "status_str",
+        "status_int",
+    )
     readonly_fields = ("text_enum", "int_enum", "blank_int", "blank_txt")
 
 

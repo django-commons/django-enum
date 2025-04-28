@@ -41,6 +41,10 @@ from tests.djenum.enums import (
     TimeEnum,
     NullableConstants,
     GNSSConstellation,
+    NestStatusBasic,
+    NestStatusInt,
+    NestStatusBasicInt,
+    NestStatusStr,
 )
 
 
@@ -158,6 +162,11 @@ class AdminDisplayBug35(models.Model):
     blank_int = EnumField(SmallPosIntEnum, null=True, default=None)
 
     blank_txt = EnumField(TextEnum, null=True, default=None)
+
+    status_basic = EnumField(NestStatusBasic, null=True, default=None)
+    status_basic_int = EnumField(NestStatusBasicInt, null=True, default=None)
+    status_int = EnumField(NestStatusInt, null=True, default=None)
+    status_str = EnumField(NestStatusStr, null=True, default=None)
 
 
 class EmptyEnumValueTester(models.Model):
