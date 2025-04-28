@@ -4,6 +4,11 @@
 Change Log
 ==========
 
+v2.2.3 (2025-04-28)
+===================
+
+* Add docs on hash equivalency, fixing `Enum value doesn't show in Django Admin's list_display <https://github.com/django-commons/django-enum/issues/123>`_
+
 v2.2.2 (2025-04-18)
 ===================
 
