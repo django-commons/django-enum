@@ -1,6 +1,6 @@
 [project]
 name = "django-enum"
-version = "2.2.2"
+version = "2.2.3"
 description = "Full and natural support for enumerations as Django model fields."
 requires-python = ">=3.9,<4.0"
 authors = [

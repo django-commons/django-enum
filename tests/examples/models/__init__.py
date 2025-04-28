@@ -11,6 +11,7 @@ from .custom_value import CustomValueExample
 from .gnss import GNSSReceiver, Constellation
 from .gnss_vanilla import GNSSReceiverBasic
 from .equivalency import EquivalencyExample
+from .hash_equivalency import HashEquivalencyExample
 from .extern import ExternalChoices
 from .flag_howto import Group
 from .text_choices import TextChoicesExample
@@ -37,6 +38,7 @@ __all__ = [
     "Constellation",
     "GNSSReceiverBasic",
     "EquivalencyExample",
+    "HashEquivalencyExample",
     "ExternalChoices",
     "Group",
     "TextChoicesExample",

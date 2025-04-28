@@ -45,3 +45,4 @@ are possible with :class:`~django_enum.fields.EnumField`. See :ref:`enum_props`.
    integrations
    migrations
    urls
+   admin

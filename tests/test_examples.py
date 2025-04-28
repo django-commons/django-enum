@@ -304,6 +304,9 @@ class ExampleTests(TestCase):  # pragma: no cover  - why is this necessary?
     def test_equivalency_howto(self):
         from tests.examples import equivalency_howto
 
+    def test_hash_equivalency_howto(self):
+        from tests.examples import hash_equivalency_howto
+
     def test_extern_howto(self):
         from tests.examples import extern_howto
 
