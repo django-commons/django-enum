@@ -103,7 +103,7 @@ The release workflow is triggered by tag creation. You must have [git tag signin
 
 ## Just Recipes
 
-```
+```bash
 build                        # build docs and package
 build-docs                   # build the docs
 build-docs-html              # build html documentation
