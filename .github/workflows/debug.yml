@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python ${{ github.event.inputs.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         id: sp
         with:
           python-version: ${{ github.event.inputs.python-version }}
