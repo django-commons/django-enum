@@ -1,5 +1,4 @@
 import typing as t
-from typing_extensions import Annotated
 
 from django.db import models
 from enum_properties import Symmetric
@@ -21,8 +20,8 @@ class MigrationTester(models.Model):
 
     # change enumeration names
     class Color(TextChoices):
-        rgb: Annotated[t.Tuple[int, int, int], Symmetric()]
-        hex: Annotated[str, Symmetric(case_fold=True)]
+        rgb: t.Annotated[t.Tuple[int, int, int], Symmetric()]
+        hex: t.Annotated[str, Symmetric(case_fold=True)]
 
         # name   value   label       rgb       hex
         RD = "R", "Red", (1, 0, 0), "ff0000"

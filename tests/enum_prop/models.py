@@ -1,7 +1,6 @@
 from django.db import models
 from django.urls import reverse
 from enum_properties import StrEnumProperties, IntEnumProperties, Symmetric
-from typing_extensions import Annotated
 import typing as t
 
 from django_enum import EnumField
@@ -148,9 +147,9 @@ class MyModel(models.Model):
         THREE = 3, "Three"
 
     class Color(StrEnumProperties):
-        label: Annotated[str, Symmetric()]
-        rgb: Annotated[t.Tuple[int, int, int], Symmetric()]
-        hex: Annotated[str, Symmetric(case_fold=True)]
+        label: t.Annotated[str, Symmetric()]
+        rgb: t.Annotated[t.Tuple[int, int, int], Symmetric()]
+        hex: t.Annotated[str, Symmetric(case_fold=True)]
 
         # name   value   label       rgb       hex
         RED = "R", "Red", (1, 0, 0), "ff0000"

@@ -1,7 +1,6 @@
 from datetime import date, datetime, time, timedelta
 from decimal import Decimal
 import typing as t
-from typing_extensions import Annotated
 from django.db.models import IntegerChoices as DjangoIntegerChoices
 from django.db.models import TextChoices as DjangoTextChoices
 from django.utils.translation import gettext as _
@@ -26,7 +25,7 @@ class DJTextEnum(DjangoTextChoices):
 class TextEnum(TextChoices):
     version: int
     help: str
-    aliases: Annotated[t.List[str], Symmetric(case_fold=True)]
+    aliases: t.Annotated[t.List[str], Symmetric(case_fold=True)]
 
     VALUE1 = (
         "V1",
@@ -59,7 +58,7 @@ class TextEnum(TextChoices):
 
 
 class Constants(FloatChoices):
-    symbol: Annotated[str, Symmetric()]
+    symbol: t.Annotated[str, Symmetric()]
 
     PI = 3.14159265358979323846264338327950288, "Pi", "π"
     e = 2.71828, "Euler's Number", "e"
@@ -103,7 +102,7 @@ class BigPosIntEnum(IntegerChoices):
 
 
 class BigIntEnum(IntegerChoices):
-    pos: Annotated[BigPosIntEnum, Symmetric()]
+    pos: t.Annotated[BigPosIntEnum, Symmetric()]
     help: str
 
     VAL0 = (
@@ -123,7 +122,7 @@ class BigIntEnum(IntegerChoices):
 
 
 class DateEnum(EnumProperties):
-    label: Annotated[str, Symmetric()]
+    label: t.Annotated[str, Symmetric()]
 
     BRIAN = date(1984, 8, 7), "Brian"
     EMMA = date(1989, 7, 27), "Emma"
@@ -148,7 +147,7 @@ class DateEnum(EnumProperties):
 
 
 class DateTimeEnum(EnumProperties):
-    label: Annotated[str, Symmetric()]
+    label: t.Annotated[str, Symmetric()]
 
     ST_HELENS = datetime(1980, 5, 18, 8, 32, 0), "Mount St. Helens"
     PINATUBO = datetime(1991, 6, 15, 20, 9, 0), "Pinatubo"
@@ -173,7 +172,7 @@ class DateTimeEnum(EnumProperties):
 
 
 class TimeEnum(EnumProperties):
-    label: Annotated[str, Symmetric()]
+    label: t.Annotated[str, Symmetric()]
 
     COB = time(17, 0, 0), "Close of Business"
     LUNCH = time(12, 30, 0), "Lunch"
@@ -198,7 +197,7 @@ class TimeEnum(EnumProperties):
 
 
 class DurationEnum(EnumProperties):
-    label: Annotated[str, Symmetric(case_fold=True)]
+    label: t.Annotated[str, Symmetric(case_fold=True)]
 
     DAY = timedelta(days=1), "DAY"
     WEEK = timedelta(weeks=1), "WEEK"
@@ -223,7 +222,7 @@ class DurationEnum(EnumProperties):
 
 
 class DecimalEnum(EnumProperties):
-    label: Annotated[str, Symmetric(case_fold=True)]
+    label: t.Annotated[str, Symmetric(case_fold=True)]
 
     ONE = Decimal("0.99"), "One"
     TWO = Decimal("0.999"), "Two"
@@ -252,10 +251,10 @@ class DecimalEnum(EnumProperties):
 
 
 class PrecedenceTest(IntegerChoices):
-    prop1: Annotated[t.Union[int, str], Symmetric()]
-    prop2: Annotated[float, Symmetric()]
-    prop3: Annotated[str, Symmetric(case_fold=False)]
-    prop4: Annotated[t.List[t.Union[str, float, int]], Symmetric(case_fold=True)]
+    prop1: t.Annotated[t.Union[int, str], Symmetric()]
+    prop2: t.Annotated[float, Symmetric()]
+    prop3: t.Annotated[str, Symmetric(case_fold=False)]
+    prop4: t.Annotated[t.List[t.Union[str, float, int]], Symmetric(case_fold=True)]
 
     P1 = 0, "Precedence 1", 3, 0.1, _("First"), ["0.4", "Fourth", 1]
     P2 = 1, "Precedence 2", 2, 0.2, _("Second"), ["0.3", "Third", 2]
@@ -287,7 +286,7 @@ class CarrierFrequency(FlagChoices):
 class GNSSConstellation(FlagChoices):
     _symmetric_builtins_ = ["name", s("label", Symmetric(case_fold=True))]
 
-    country: Annotated[str, Symmetric()]
+    country: t.Annotated[str, Symmetric()]
     satellites: int
     frequencies: CarrierFrequency
 
@@ -338,7 +337,7 @@ class ExternEnum(IntEnumProperties):
     are supported.
     """
 
-    label: Annotated[str, Symmetric(case_fold=True)]
+    label: t.Annotated[str, Symmetric(case_fold=True)]
 
     ONE = 1, "One"
     TWO = 2, "Two"
@@ -346,7 +345,7 @@ class ExternEnum(IntEnumProperties):
 
 
 class SmallPositiveFlagEnum(FlagChoices):
-    number: Annotated[int, Symmetric()]
+    number: t.Annotated[int, Symmetric()]
 
     ONE = 2**10, "One", 1
     TWO = 2**11, "Two", 2
@@ -356,7 +355,7 @@ class SmallPositiveFlagEnum(FlagChoices):
 
 
 class PositiveFlagEnum(FlagChoices):
-    number: Annotated[int, Symmetric()]
+    number: t.Annotated[int, Symmetric()]
 
     ONE = 2**26, "One", 1
     TWO = 2**27, "Two", 2
@@ -366,7 +365,7 @@ class PositiveFlagEnum(FlagChoices):
 
 
 class BigPositiveFlagEnum(FlagChoices):
-    version: Annotated[float, Symmetric()]
+    version: t.Annotated[float, Symmetric()]
 
     ONE = 2**58, "One", 1.1
     TWO = 2**59, "Two", 2.2
@@ -376,7 +375,7 @@ class BigPositiveFlagEnum(FlagChoices):
 
 
 class ExtraBigPositiveFlagEnum(FlagChoices):
-    version: Annotated[float, Symmetric()]
+    version: t.Annotated[float, Symmetric()]
 
     ONE = 2**61, "One", 1.1
     TWO = 2**62, "Two", 2.2

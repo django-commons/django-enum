@@ -1,7 +1,6 @@
 # flake8: noqa
 import typing as t
 from django.db import models
-from typing_extensions import Annotated
 from django_enum import EnumField
 from django_enum.choices import TextChoices
 from enum_properties import Symmetric, symmetric
@@ -12,8 +11,8 @@ class TextChoicesExample(models.Model):
     class Color(TextChoices):
 
         # no need to specify label because it is built in
-        rgb: Annotated[t.Tuple[int, int, int], Symmetric()]
-        hex: Annotated[str, Symmetric(case_fold=True)]
+        rgb: t.Annotated[t.Tuple[int, int, int], Symmetric()]
+        hex: t.Annotated[str, Symmetric(case_fold=True)]
 
         # fmt: off
         # name value label       rgb       hex
