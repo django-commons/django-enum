@@ -2,7 +2,6 @@
 import typing as t
 from django.db import models
 from enum_properties import Symmetric
-from typing_extensions import Annotated
 from django_enum import EnumField
 from django_enum.choices import TextChoices
 
@@ -11,8 +10,8 @@ class ChoicesWithProperties(models.Model):
     class Color(TextChoices):
 
         # label is added as a symmetric property by the base class
-        rgb: Annotated[t.Tuple[int, int, int], Symmetric()]
-        hex: Annotated[str, Symmetric(case_fold=True)]
+        rgb: t.Annotated[t.Tuple[int, int, int], Symmetric()]
+        hex: t.Annotated[str, Symmetric(case_fold=True)]
 
         # fmt: off
         # name value label       rgb       hex

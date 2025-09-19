@@ -2,7 +2,6 @@
 import typing as t
 from django.db import models
 from enum_properties import Symmetric, StrEnumProperties
-from typing_extensions import Annotated
 from django_enum import EnumField
 
 
@@ -11,8 +10,8 @@ class PropertyExample(models.Model):
     class Color(StrEnumProperties):
 
         label: str
-        rgb: Annotated[t.Tuple[int, int, int], Symmetric()]
-        hex: Annotated[str, Symmetric(case_fold=True)]
+        rgb: t.Annotated[t.Tuple[int, int, int], Symmetric()]
+        hex: t.Annotated[str, Symmetric(case_fold=True)]
 
         # fmt: off
         # name value label       rgb       hex

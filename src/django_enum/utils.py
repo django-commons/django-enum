@@ -16,9 +16,8 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    get_args,
 )
-
-from typing_extensions import get_args
 
 __all__ = [
     "choices",
