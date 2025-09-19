@@ -4,6 +4,11 @@
 Change Log
 ==========
 
+v2.2.4 (2025-09-18)
+===================
+
+* Fixed `Avoid depending on typing_extensions. <https://github.com/django-commons/django-enum/pull/134>`_
+
 v2.2.3 (2025-04-28)
 ===================
 
