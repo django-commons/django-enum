@@ -51,6 +51,8 @@ You can run a live documentation server that will automatically update during ed
 
 `django-enum` uses [pytest](https://docs.pytest.org/) to define and run tests. All the tests are housed under ``tests/``. Before a PR is accepted, all tests must be passing and the code coverage must be at 100%. A small number of exempted error handling branches are acceptable.
 
+**Note if not using** ``just test-all`` **you will need to make sure the migrations exist first by running** ``just manage makemigrations``
+
 To run the full suite:
 
 ```bash

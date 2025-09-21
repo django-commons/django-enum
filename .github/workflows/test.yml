@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14.0-rc.3']
         postgres-version: ['9.6', '12', 'latest']
         psycopg-version: ['psycopg2', 'psycopg3']
         django-version:
@@ -79,6 +79,19 @@ jobs:
           # https://github.com/psycopg/psycopg2/pull/1695
           - python-version: '3.13'
             psycopg-version: 'psycopg2'
+
+
+          - python-version: '3.14.0-rc.3'
+            django-version: '3.2'
+          - python-version: '3.14.0-rc.3'
+            django-version: '4.2'
+          
+          - python-version: '3.14.0-rc.3'
+            django-version: '5.1'
+          # https://github.com/psycopg/psycopg2/pull/1695
+          - python-version: '3.14.0-rc.3'
+            psycopg-version: 'psycopg2'
+
     env:
       RDBMS: postgres
       POSTGRES_PASSWORD: postgres

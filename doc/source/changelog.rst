@@ -4,9 +4,10 @@
 Change Log
 ==========
 
-v2.2.4 (2025-09-18)
+v2.2.4 (2025-09-21)
 ===================
 
+* Implemented `Support Python 3.14 <https://github.com/django-commons/django-enum/issues/135>`_
 * Fixed `Avoid depending on typing_extensions. <https://github.com/django-commons/django-enum/pull/134>`_
 
 v2.2.3 (2025-04-28)
