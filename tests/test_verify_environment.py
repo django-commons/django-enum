@@ -5,6 +5,8 @@ from django.db import connection
 import typing as t
 from django.test import TestCase
 import pytest
+from django import VERSION
+from packaging.version import parse as parse_version
 
 
 def get_postgresql_version() -> t.Tuple[int, ...]:
@@ -38,17 +40,17 @@ class TestEnvironment(TestCase):
         expected_db_ver = os.environ.get("TEST_DATABASE_VERSION", None)
         expected_client = os.environ.get("TEST_DATABASE_CLIENT_VERSION", None)
 
-        expected_python = tuple(int(v) for v in expected_python.split(".") if v)
-        assert sys.version_info[: len(expected_python)] == expected_python, (
-            f"Python Version Mismatch: {sys.version_info[: len(expected_python)]} != "
-            f"{expected_python}"
+        expected_python = parse_version(expected_python)
+        assert sys.version_info[:2] == (expected_python.major, expected_python.minor), (
+            f"Python Version Mismatch: {sys.version_info[:2]} != {expected_python}"
         )
 
         try:
-            expected_django = tuple(int(v) for v in expected_django.split(".") if v)
-            assert django.VERSION[: len(expected_django)] == expected_django, (
-                f"Django Version Mismatch: {django.VERSION[: len(expected_django)]} != "
-                f"{expected_django}"
+            dj_actual = VERSION[:2]
+            expected_django = parse_version(expected_django)
+            dj_expected = (expected_django.major, expected_django.minor)
+            assert dj_actual == dj_expected, (
+                f"Django Version Mismatch: {dj_actual} != {expected_django}"
             )
         except ValueError:
             assert expected_django == django.__version__
