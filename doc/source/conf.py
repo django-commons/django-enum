@@ -88,6 +88,8 @@ intersphinx_mapping = {
     "python": ('https://docs.python.org/3', None)
 }
 
+linkcheck_allow_redirects = True
+
 
 def setup(app):
     # Register a sphinx.ext.autodoc.between listener to ignore everything

@@ -334,9 +334,11 @@ class UtilsTests(TestCase):
             A = 1 << 0, "a"
             B = 1 << 1, "b"
             C = 1 << 2, "c"
+
             AB = A | B, "ab"
             BC = B | C, "bc"
             ABC = A | B | C, "abc"
+
             AA = A, "aa"
             BB = B, "bb"
 
@@ -436,13 +438,19 @@ class UtilsTests(TestCase):
             A = 1 << 0, "a"
             B = 1 << 1, "b"
             C = 1 << 2, "c"
-            AB = A[0] | B[0], "ab"
-            BC = B[0] | C[0], "bc"
-            ABC = A[0] | B[0] | C[0], "abc"
+
+            if sys.version_info[:2] >= (3, 14):
+                AB = A | B, "ab"
+                BC = B | C, "bc"
+                ABC = A | B | C, "abc"
+            else:
+                AB = A[0] | B[0], "ab"
+                BC = B[0] | C[0], "bc"
+                ABC = A[0] | B[0] | C[0], "abc"
 
             @property
             def not_a_member(self):
-                return self.A[0] | self.B[0] | self.C[0]
+                return self.A | self.B | self.C
 
         self.assertEqual(
             list(members(NoAliasesFlag)),
@@ -468,5 +476,42 @@ class UtilsTests(TestCase):
                 AliasesFlag.AB,
                 AliasesFlag.BC,
                 AliasesFlag.ABC,
+            ],
+        )
+
+        class AliasesFlagWithProp(FlagChoices):
+            prop: bool
+
+            A = 1 << 0, "a", False
+            B = 1 << 1, "b", False
+            C = 1 << 2, "c", False
+
+            if sys.version_info[:2] >= (3, 14):
+                AB = A | B, "ab", True
+                BC = B | C, "bc", True
+                ABC = A | B | C, "abc", True
+            else:
+                AB = A[0] | B[0], "ab", True
+                BC = B[0] | C[0], "bc", True
+                ABC = A[0] | B[0] | C[0], "abc", True
+
+            @property
+            def not_a_member(self):
+                return self.A | self.B | self.C
+
+        self.assertEqual(
+            list(members(AliasesFlagWithProp, aliases=False)),
+            [AliasesFlagWithProp.A, AliasesFlagWithProp.B, AliasesFlagWithProp.C],
+        )
+
+        self.assertEqual(
+            list(members(AliasesFlagWithProp)),
+            [
+                AliasesFlagWithProp.A,
+                AliasesFlagWithProp.B,
+                AliasesFlagWithProp.C,
+                AliasesFlagWithProp.AB,
+                AliasesFlagWithProp.BC,
+                AliasesFlagWithProp.ABC,
             ],
         )

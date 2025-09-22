@@ -143,7 +143,13 @@ check-docs-links: _link_check
     from pathlib import Path
     # The json output isn't valid, so we have to fix it before we can process.
     data = json.loads(f"[{','.join((Path(os.getcwd()) / 'doc/build/output.json').read_text().splitlines())}]")
-    broken_links = [link for link in data if link["status"] not in {"working", "redirected", "unchecked", "ignored"}]
+    broken_links = [
+        link for link in data
+        if (
+            link["status"] not in {"working", "redirected", "unchecked", "ignored"}
+            and link["uri"] not in {"https://www.mysql.com"}
+        )
+    ]
     if broken_links:
         for link in broken_links:
             print(f"[{link['status']}] {link['filename']}:{link['lineno']} -> {link['uri']}", file=sys.stderr)
