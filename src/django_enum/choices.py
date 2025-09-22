@@ -130,6 +130,34 @@ class FlagChoices(  # type: ignore
     """
     An integer flag enumeration type that accepts enum-properties property
     lists.
+
+    Note that on Pythons before 3.14 there is a quirk to the choices type where
+    member tuples including the label are not unpacked on declaration. This means if you
+    want to define composite fields on these versions it might look like this on
+    Python < 3.14:
+
+    .. code-block:: python
+
+        class MyFlag(FlagChoices):
+            A = 1 << 0, "a"
+            B = 1 << 1, "b"
+            C = 1 << 2, "c"
+            AB = A[0] | B[0], "ab"  # Python < 3.14
+            BC = B[0] | C[0], "bc"  # Python < 3.14
+            ABC = A[0] | B[0] | C[0], "abc"  # Python < 3.14
+
+    And this on Python >= 3.14:
+
+    .. code-block:: python
+
+        class MyFlag(FlagChoices):
+            A = 1 << 0, "a"
+            B = 1 << 1, "b"
+            C = 1 << 2, "c"
+            AB = A | B, "ab"  # Python >= 3.14
+            BC = B | C, "bc"  # Python >= 3.14
+            ABC = A | B | C, "abc"  # Python >= 3.14
+
     """
 
     def __hash__(self):

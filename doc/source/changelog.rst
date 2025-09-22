@@ -7,6 +7,7 @@ Change Log
 v2.2.4 (2025-09-21)
 ===================
 
+* Documented `Choices derived enum-properties types do not unpack member tuples on declaration <https://github.com/django-commons/django-enum/issues/136>`_
 * Implemented `Support Python 3.14 <https://github.com/django-commons/django-enum/issues/135>`_
 * Fixed `Avoid depending on typing_extensions. <https://github.com/django-commons/django-enum/pull/134>`_
 
