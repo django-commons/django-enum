@@ -211,7 +211,7 @@ lint: sort-imports
 fix: lint format
 
 # run all static checks
-check: check-lint check-format check-types check-package check-docs check-docs-links check-readme
+check: install-docs check-lint check-format check-types check-package check-docs check-docs-links check-readme
 
 # run all tests
 test-all DB_CLIENT="dev":
