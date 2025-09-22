@@ -62,7 +62,10 @@ packages = ["src/django_enum"]
 
 
 [project.optional-dependencies]
-properties = ["enum-properties>=2.3.0"]
+properties = [
+    "enum-properties>=2.3.0; python_version < '3.14'",
+    "enum-properties>=2.4.0; python_version >= '3.14'",
+]
 filters = ["django-filter>=21"]
 rest = ["djangorestframework>=3.9,<4.0"]
 
