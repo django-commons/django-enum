@@ -952,7 +952,7 @@ class EnumPositiveBigIntegerField(IntEnumField, PositiveBigIntegerField):
     """
 
 
-class EnumDateField(EnumField[Type[date]], DateField):
+class EnumDateField(EnumField[Type[date]], DateField):  # type: ignore[misc]
     """
     A database field supporting enumerations with date values.
     """
@@ -986,7 +986,7 @@ class EnumDateField(EnumField[Type[date]], DateField):
         )
 
 
-class EnumDateTimeField(EnumField[Type[datetime]], DateTimeField):
+class EnumDateTimeField(EnumField[Type[datetime]], DateTimeField):  # type: ignore[misc]
     """
     A database field supporting enumerations with datetime values.
     """

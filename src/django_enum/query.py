@@ -86,6 +86,7 @@ class HasAnyFlagsLookup(HasAllFlagsLookup):
 
     def process_rhs(self, compiler, connection):
         rhs_sql, rhs_params = super().process_rhs(compiler, connection)
+        rhs_params = list(rhs_params) if isinstance(rhs_params, tuple) else rhs_params
         if rhs_params:
             rhs_params[0] = 0
         else:
