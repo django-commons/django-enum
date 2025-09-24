@@ -33,7 +33,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14.0-rc.3']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
         postgres-version: ['9.6', '12', 'latest']
         psycopg-version: ['psycopg2', 'psycopg3']
         django-version:
@@ -81,15 +81,15 @@ jobs:
             psycopg-version: 'psycopg2'
 
 
-          - python-version: '3.14.0-rc.3'
+          - python-version: '3.14'
             django-version: '3.2'
-          - python-version: '3.14.0-rc.3'
+          - python-version: '3.14'
             django-version: '4.2'
           
-          - python-version: '3.14.0-rc.3'
+          - python-version: '3.14'
             django-version: '5.1'
           # https://github.com/psycopg/psycopg2/pull/1695
-          - python-version: '3.14.0-rc.3'
+          - python-version: '3.14'
             psycopg-version: 'psycopg2'
 
     env:
@@ -130,6 +130,7 @@ jobs:
       uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
+        allow-prereleases: true
     - name: Install uv
       uses: astral-sh/setup-uv@v6
       with:
@@ -174,7 +175,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.9', '3.13']
+        python-version: [ '3.9', '3.14']
         django-version:
           - '3.2' # LTS April 2024
           - '4.2' # LTS April 2026
@@ -182,7 +183,7 @@ jobs:
         exclude:
           - python-version: '3.9'
             django-version: '5.2'
-          - python-version: '3.13'
+          - python-version: '3.14'
             django-version: '3.2'
 
     steps:
@@ -192,6 +193,7 @@ jobs:
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
       - name: Install uv
         uses: astral-sh/setup-uv@v6
         with:
@@ -231,7 +233,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.9', '3.13']
+        python-version: [ '3.9', '3.14']
         mysql-version: ['5.7', 'latest']
         mysqlclient-version: ['1.4.3', '']
         django-version:
@@ -239,7 +241,7 @@ jobs:
           - '4.2' # LTS April 2026
           - '5.2' # LTS April 2028
         exclude:
-          - python-version: '3.13'
+          - python-version: '3.14'
             django-version: '3.2'
           - python-version: '3.9'
             django-version: '5.2'
@@ -291,6 +293,7 @@ jobs:
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
       - name: Install Emacs
         if: ${{ github.event.inputs.debug == 'true' }}
         run: |
@@ -340,7 +343,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.9', '3.13']
+        python-version: [ '3.9', '3.14']
         mysqlclient-version: ['1.4.3', '']
         mariadb-version: ['10.2', 'latest']
         mariadb-healthcheck: ["mysqladmin ping", "healthcheck.sh --connect --innodb_initialized"]
@@ -349,7 +352,7 @@ jobs:
           - '4.2' # LTS April 2026
           - '5.2' # LTS April 2028
         exclude:
-          - python-version: '3.13'
+          - python-version: '3.14'
             django-version: '3.2'
           - python-version: '3.9'
             django-version: '5.2'
@@ -396,6 +399,7 @@ jobs:
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
       - name: Install Emacs
         if: ${{ github.event.inputs.debug == 'true' }}
         run: |
@@ -497,6 +501,7 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
       - name: Install Emacs
         if: ${{ github.event.inputs.debug == 'true' }}
         run: |
@@ -551,14 +556,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.9', '3.13']
+        python-version: [ '3.9', '3.14']
         django-version:
           - '3.2' # LTS April 2024
           - '5.2' # LTS April 2028
         exclude:
           - python-version: '3.9'
             django-version: '5.2'
-          - python-version: '3.13'
+          - python-version: '3.14'
             django-version: '3.2'
 
     steps:
@@ -568,6 +573,7 @@ jobs:
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
       - name: Install uv
         uses: astral-sh/setup-uv@v6
         with:
@@ -612,14 +618,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.9', '3.13']
+        python-version: [ '3.9', '3.14']
         django-version:
           - '3.2' # LTS April 2024
           - '5.2' # LTS April 2028
         exclude:
           - python-version: '3.9'
             django-version: '5.2'
-          - python-version: '3.13'
+          - python-version: '3.14'
             django-version: '3.2'
 
     steps:
@@ -629,6 +635,7 @@ jobs:
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
+          allow-prereleases: true
       - name: Install uv
         uses: astral-sh/setup-uv@v6
         with:
