@@ -185,6 +185,8 @@ jobs:
             django-version: '5.2'
           - python-version: '3.14'
             django-version: '3.2'
+          - python-version: '3.14'
+            django-version: '4.2'
 
     steps:
       - uses: actions/checkout@v5
@@ -245,6 +247,8 @@ jobs:
             django-version: '3.2'
           - python-version: '3.9'
             django-version: '5.2'
+          - python-version: '3.14'
+            django-version: '4.2'
 
 
           - django-version: '3.2'
@@ -356,6 +360,8 @@ jobs:
             django-version: '3.2'
           - python-version: '3.9'
             django-version: '5.2'
+          - python-version: '3.14'
+            django-version: '4.2'
 
           - django-version: '3.2'
             mariadb-version: 'latest'
@@ -565,6 +571,8 @@ jobs:
             django-version: '5.2'
           - python-version: '3.14'
             django-version: '3.2'
+          - python-version: '3.14'
+            django-version: '4.2'
 
     steps:
       - uses: actions/checkout@v5
@@ -627,6 +635,8 @@ jobs:
             django-version: '5.2'
           - python-version: '3.14'
             django-version: '3.2'
+          - python-version: '3.14'
+            django-version: '4.2'
 
     steps:
       - uses: actions/checkout@v5
