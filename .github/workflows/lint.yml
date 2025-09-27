@@ -7,9 +7,9 @@ on:
   push:
     tags-ignore:
       - '*'
-    branches:
-      - '*'
+    branches: ['main']
   pull_request:
+    branches: ['main']
   workflow_call:
   workflow_dispatch:
     inputs:

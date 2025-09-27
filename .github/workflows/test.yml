@@ -7,9 +7,9 @@ on:
   push:
     tags-ignore:
       - '*'
-    branches:
-      - '*'
+    branches: ['main']
   pull_request:
+    branches: ['main']
   workflow_call:
   workflow_dispatch:
     inputs:
@@ -41,6 +41,7 @@ jobs:
           - '4.2' # LTS April 2026
           - '5.1' # December 2025
           - '5.2' # LTS April 2028
+          - '6.0a1' # alpha prerelease
         exclude:
           - django-version: '4.2'
             postgres-version: '9.6'
@@ -91,6 +92,21 @@ jobs:
           # https://github.com/psycopg/psycopg2/pull/1695
           - python-version: '3.14'
             psycopg-version: 'psycopg2'
+          
+          - postgres-version: '9.6'
+            django-version: '6.0a1'
+          - postgres-version: '12'
+            django-version: '6.0a1'
+          - python-version: '3.9'
+            django-version: '6.0a1'
+          - python-version: '3.10'
+            django-version: '6.0a1'
+          - python-version: '3.11'
+            django-version: '6.0a1'
+          - python-version: '3.12'
+            django-version: '6.0a1'
+          - python-version: '3.13'
+            django-version: '6.0a1'
 
     env:
       RDBMS: postgres
@@ -138,9 +154,14 @@ jobs:
     - name: Setup Just
       uses: extractions/setup-just@v3
     - name: Install Release Dependencies
+      shell: bash
       run: |
         just setup ${{ steps.sp.outputs.python-path }}
-        just test-lock "Django~=${{ matrix.django-version }}.0"
+        if [[ "${{ matrix.django-version }}" =~ (a|b|rc) ]]; then
+          just test-lock Django==${{ matrix.django-version }}
+        else
+          just test-lock Django~=${{ matrix.django-version }}.0
+        fi
     - name: Install Emacs
       if: ${{ github.event.inputs.debug == 'true' }}
       run: |
@@ -315,6 +336,7 @@ jobs:
       - name: Setup Just
         uses: extractions/setup-just@v3
       - name: Install Release Dependencies
+        shell: bash
         run: |
           just setup ${{ steps.sp.outputs.python-path }}
           just test-lock Django~=${{ matrix.django-version }}.0
