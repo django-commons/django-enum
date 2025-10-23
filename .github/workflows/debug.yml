@@ -47,7 +47,7 @@ jobs:
         run: |
           sudo apt install emacs
       - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3.22
+        uses: mxschmitt/action-tmate@v3.23
         with:
           detached: true
         timeout-minutes: 60
