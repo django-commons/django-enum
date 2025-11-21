@@ -28,26 +28,26 @@ jobs:
     strategy:
       matrix:
         # run static analysis on bleeding and trailing edges
-        python-version: [ '3.9', '3.11', '3.14' ]
+        python-version: ['3.10', '3.12', '3.14']
         django-version:
-          - '3.2' # LTS April 2024
-          - '4.2' # LTS April 2026
-          - '5.2' # LTS April 2028
+          - '4.2'    # LTS April 2024
+          - '5.2'    # April 2028
+          - '6.0rc1' # April 2027
         exclude:
-          - python-version: '3.9'
+          - python-version: '3.12'
             django-version: '4.2'
-          - python-version: '3.9'
-            django-version: '5.2'
-
-          - python-version: '3.11'
-            django-version: '3.2'
-          - python-version: '3.11'
-            django-version: '5.2'
-
-          - python-version: '3.14'
-            django-version: '3.2'
           - python-version: '3.14'
             django-version: '4.2'
+
+          - python-version: '3.10'
+            django-version: '5.2'
+          - python-version: '3.14'
+            django-version: '5.2'
+
+          - python-version: '3.10'
+            django-version: '6.0rc1'
+          - python-version: '3.12'
+            django-version: '6.0rc1'
 
     env:
       RDBMS: sqlite
@@ -71,7 +71,11 @@ jobs:
       - name: Install Dependencies
         run: |
           just setup ${{ steps.sp.outputs.python-path }}
-          just test-lock Django~=${{ matrix.django-version }}.0
+          if [[ "${{ matrix.django-version }}" =~ (a|b|rc) ]]; then
+            just test-lock Django==${{ matrix.django-version }}
+          else
+            just test-lock Django~=${{ matrix.django-version }}.0
+          fi
           just install-docs
       - name: Install Emacs
         if: ${{ github.event.inputs.debug == 'true' }}

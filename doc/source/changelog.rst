@@ -4,6 +4,12 @@
 Change Log
 ==========
 
+v2.3.0 (2025-11-21)
+===================
+
+* `Drop support for Django 3.2-4.1 <https://github.com/django-commons/django-enum/issues/153>`_
+* `Drop support for Python 3.9 <https://github.com/django-commons/django-enum/issues/152>`_
+
 v2.2.5 (2025-09-27)
 ===================
 
