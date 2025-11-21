@@ -39,7 +39,7 @@ jobs:
       PACKAGE_NAME: ${{ steps.set-package.outputs.package_name }}
       RELEASE_VERSION: ${{ steps.set-package.outputs.release_version }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: Set up Python
       uses: actions/setup-python@v6
       id: sp
