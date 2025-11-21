@@ -14,11 +14,11 @@
 
 ---------------------------------------------------------------------------------------------------
 
-[![Postgres](https://img.shields.io/badge/Postgres-9.6%2B-blue)](https://www.postgresql.org/)
-[![MySQL](https://img.shields.io/badge/MySQL-5.7%2B-blue)](https://www.mysql.com/)
-[![MariaDB](https://img.shields.io/badge/MariaDB-10.2%2B-blue)](https://mariadb.org/)
+[![Postgres](https://img.shields.io/badge/Postgres-12%2B-blue)](https://www.postgresql.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0%2B-blue)](https://www.mysql.com/)
+[![MariaDB](https://img.shields.io/badge/MariaDB-10.4%2B-blue)](https://mariadb.org/)
 [![SQLite](https://img.shields.io/badge/SQLite-3.8%2B-blue)](https://www.sqlite.org/)
-[![Oracle](https://img.shields.io/badge/Oracle-18%2B-blue)](https://www.oracle.com/database/)
+[![Oracle](https://img.shields.io/badge/Oracle-21c%2B-blue)](https://www.oracle.com/database/)
 
 ---------------------------------------------------------------------------------------------------
 

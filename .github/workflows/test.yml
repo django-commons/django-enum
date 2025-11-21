@@ -486,7 +486,6 @@ jobs:
       actions: write
     env:
       RDBMS: oracle
-      COVERAGE_FILE: linux-py${{ matrix.python-version }}-dj${{ matrix.django-version }}-oracle${{ matrix.oracle-version }}.coverage
       TEST_PYTHON_VERSION: ${{ matrix.python-version }}
       TEST_DJANGO_VERSION: ${{ matrix.django-version }}
       TEST_DATABASE_VERSION: ${{ matrix.oracle-version }}
@@ -544,6 +543,10 @@ jobs:
           --health-retries 10
 
     steps:
+      - name: Set coverage file
+        run: |
+          ORACLE_TAG=$(echo "${{ matrix.oracle-version }}" | cut -d':' -f2)
+          echo "COVERAGE_FILE=linux-py${{ matrix.python-version }}-dj${{ matrix.django-version }}-oracle${ORACLE_TAG}.coverage" >> $GITHUB_ENV
       - uses: actions/checkout@v6
       - name: Set up Python ${{ matrix.python-version }}
         id: sp
@@ -614,7 +617,7 @@ jobs:
       matrix:
         python-version: ['3.10', '3.12', '3.14']
         django-version:
-          - '4.2'    # LTS April 2024
+          - '4.2'    # LTS April 2026
           - '5.2'    # LTS April 2028
           - '6.0rc1' # April 2027
         exclude:

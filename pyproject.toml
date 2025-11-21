@@ -125,7 +125,7 @@ mysql = [
     "mysqlclient>=1.4.0",
 ]
 oracle = [
-    "cx-oracle>=8.3.0",
+    "oracledb>=2.3.0",
 ]
 
 [tool.mypy]
