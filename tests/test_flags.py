@@ -384,7 +384,7 @@ class FlagTests(TestCase):
                 if (
                     IGNORE_ORA_00932
                     and connection.vendor == "oracle"
-                    and "ORA-00932" in str(err)
+                    and ("ORA-00932" in str(err) or "ORA-22848" in str(err))
                 ):
                     # this is an oracle bug - intermittent failure on
                     # perfectly fine date format in SQL
@@ -392,7 +392,7 @@ class FlagTests(TestCase):
                     # pytest.skip("Oracle bug ORA-00932 encountered - skipping")
                     not_working.append(field.name)
                     # continue
-                    pytest.skip("Oracle bug ORA-00932 encountered - skipping")
+                    pytest.skip(f"Oracle bug {err} encountered - skipping")
                 raise
 
             working.append(field.name)
