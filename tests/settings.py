@@ -67,6 +67,12 @@ elif rdbms == "oracle":  # pragma: no cover
             "PASSWORD": os.environ.get("ORACLE_PASSWORD", "password"),
         }
     }
+    try:
+        import oracledb
+
+        oracledb.init_oracle_client()
+    except ImportError:
+        pass
 
 # from django.db.backends.oracle.base import FormatStylePlaceholderCursor
 # from django.db.backends import utils

@@ -581,11 +581,17 @@ jobs:
       - name: Install Oracle Client
         # https://askubuntu.com/questions/1512196/libaio1-on-noble
         run: |
-          curl --output oracle-client.rpm https://download.oracle.com/otn_software/linux/instantclient/2116000/oracle-instantclient-basiclite-21.16.0.0.0-1.el8.x86_64.rpm
           sudo apt install alien libaio1t64
-          sudo alien -i oracle-client.rpm
-          sudo sh -c "echo /usr/lib/oracle/21/client64/lib/ > /etc/ld.so.conf.d/oracle.conf"
           sudo ln -s /usr/lib/x86_64-linux-gnu/libaio.so.1t64 /usr/lib/x86_64-linux-gnu/libaio.so.1
+          if [[ "${{ matrix.django-version }}" == "4.2" ]]; then
+            curl --output oracle-client.rpm https://download.oracle.com/otn_software/linux/instantclient/2116000/oracle-instantclient-basiclite-21.16.0.0.0-1.el8.x86_64.rpm
+            sudo alien -i oracle-client.rpm
+            sudo sh -c "echo /usr/lib/oracle/21/client64/lib/ > /etc/ld.so.conf.d/oracle.conf"
+          else
+            curl --output oracle-client.rpm https://download.oracle.com/otn_software/linux/instantclient/2326000/oracle-instantclient-basiclite-23.26.0.0.0-1.el9.x86_64.rpm
+            sudo alien -i oracle-client.rpm
+            sudo sh -c "echo /usr/lib/oracle/23/client64/lib/ > /etc/ld.so.conf.d/oracle.conf"
+          fi
           sudo ldconfig
       - name: Install Release Dependencies
         run: |
