@@ -592,8 +592,13 @@ jobs:
           fi
       - name: Run Full Unit Tests
         run: |
-          just test-all oracle
-
+          if [[ "${{ matrix.django-version }}" == "4.2" ]]; then
+            echo "ORACLE_DATABASE=XEPDB1" >> $GITHUB_ENV
+            just test-all cx_oracle
+          else
+            echo "ORACLE_DATABASE=FREEPDB1" >> $GITHUB_ENV
+            just test-all oracledb
+          fi
       - name: Store coverage files
         uses: actions/upload-artifact@v5
         with:

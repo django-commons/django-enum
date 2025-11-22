@@ -124,7 +124,10 @@ psycopg3 = [
 mysql = [
     "mysqlclient>=1.4.0",
 ]
-oracle = [
+cx_oracle = [
+    "cx-oracle>=8.3.0",
+]
+oracledb = [
     "oracledb>=2.3.0",
 ]
 
