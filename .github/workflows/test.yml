@@ -547,6 +547,13 @@ jobs:
         run: |
           ORACLE_TAG=$(echo "${{ matrix.oracle-version }}" | cut -d':' -f2)
           echo "COVERAGE_FILE=linux-py${{ matrix.python-version }}-dj${{ matrix.django-version }}-oracle${ORACLE_TAG}.coverage" >> $GITHUB_ENV
+          if [[ "${{ matrix.django-version }}" == "4.2" ]]; then
+            echo "ORACLE_DATABASE=XEPDB1" >> $GITHUB_ENV
+            just test-all cx_oracle
+          else
+            echo "ORACLE_DATABASE=FREEPDB1" >> $GITHUB_ENV
+            just test-all oracledb
+          fi
       - uses: actions/checkout@v6
       - name: Set up Python ${{ matrix.python-version }}
         id: sp
@@ -593,10 +600,8 @@ jobs:
       - name: Run Full Unit Tests
         run: |
           if [[ "${{ matrix.django-version }}" == "4.2" ]]; then
-            echo "ORACLE_DATABASE=XEPDB1" >> $GITHUB_ENV
             just test-all cx_oracle
           else
-            echo "ORACLE_DATABASE=FREEPDB1" >> $GITHUB_ENV
             just test-all oracledb
           fi
       - name: Store coverage files
