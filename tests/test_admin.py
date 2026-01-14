@@ -312,7 +312,8 @@ class _GenericAdminFormTest(StaticLiveServerTestCase):
                 )
 
             # save
-            self.page.click("input[name='_save']")
+            with self.page.expect_navigation():
+                self.page.click("input[name='_save']")
 
             obj.refresh_from_db()
             self.verify_changes(obj, changes)
@@ -321,7 +322,8 @@ class _GenericAdminFormTest(StaticLiveServerTestCase):
         # delete the object
         self.page.goto(self.change_url(obj.pk))
         self.page.click("a.deletelink")
-        self.page.click("input[type='submit']")
+        with self.page.expect_navigation():
+            self.page.click("input[type='submit']")
 
         # verify deletion
         self.assertFalse(self.MODEL_CLASS.objects.filter(pk=obj.pk).exists())

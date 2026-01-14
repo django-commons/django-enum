@@ -34,6 +34,10 @@ setup python="python":
     @just run pre-commit install
     @just run playwright install
 
+# install playwright drivers
+install-playwright:
+    @just run playwright install
+
 # install git pre-commit hooks
 install-precommit:
     @just run pre-commit install
@@ -231,7 +235,7 @@ test-all DB_CLIENT="dev":
     @just run pytest --cov-append
 
 # run tests
-test *TESTS:
+test *TESTS: install-playwright
     @just run pytest --cov-append {{ TESTS }}
 
 # run the pre-commit checks
