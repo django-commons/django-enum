@@ -110,7 +110,7 @@ docs = [
     "docutils>=0.21.2",
     "furo>=2024.8.6",
     "readme-renderer[md]>=44.0",
-    "sphinx<9.0",
+    "sphinx>=8.0",
     "sphinx-autobuild>=2024.10.3",
     "sphinx-tabs>=3.4.7",
     "sphinxcontrib-django>=2.5",
