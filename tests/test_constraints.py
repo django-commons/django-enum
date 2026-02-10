@@ -62,17 +62,19 @@ class ConstraintTests(EnumTypeMixin, TestCase):
             "multi_unconstrained_non_strict"
         )
 
-        def do_insert(db_cursor, db_field, db_insert):
-            with transaction.atomic():
-                if db_field is not multi_unconstrained_non_strict:
-                    return db_cursor.execute(
-                        f"INSERT INTO {table_name} ({db_field.column}, "
-                        f"{multi_unconstrained_non_strict.column}) VALUES "
-                        f"({db_insert}, {getattr(multi_unconstrained_non_strict.default, 'value', multi_unconstrained_non_strict.default)})"
+        def do_insert(db_field, db_insert):
+            with connection.cursor() as db_cursor:
+                with transaction.atomic():
+                    if db_field is not multi_unconstrained_non_strict:
+                        db_cursor.execute(
+                            f"INSERT INTO {table_name} ({db_field.column}, "
+                            f"{multi_unconstrained_non_strict.column}) VALUES "
+                            f"({db_insert}, {getattr(multi_unconstrained_non_strict.default, 'value', multi_unconstrained_non_strict.default)})"
+                        )
+                        return
+                    db_cursor.execute(
+                        f"INSERT INTO {table_name} ({db_field.column}) VALUES ({db_insert})"
                     )
-                return db_cursor.execute(
-                    f"INSERT INTO {table_name} ({db_field.column}) VALUES ({db_insert})"
-                )
 
         for field, vals in [
             (
@@ -128,23 +130,20 @@ class ConstraintTests(EnumTypeMixin, TestCase):
                 ),
             ),
         ]:
-            with connection.cursor() as cursor:
-                for insert, value in vals:
-                    MultiPrimitiveTestModel.objects.all().delete()
+            for insert, value in vals:
+                MultiPrimitiveTestModel.objects.all().delete()
 
-                    do_insert(cursor, field, insert)
+                do_insert(field, insert)
 
-                    if value == "NULL":
-                        qry = MultiPrimitiveTestModel.objects.filter(
-                            **{f"{field.name}__isnull": True}
-                        )
-                    else:
-                        qry = MultiPrimitiveTestModel.objects.filter(
-                            **{field.name: value}
-                        )
+                if value == "NULL":
+                    qry = MultiPrimitiveTestModel.objects.filter(
+                        **{f"{field.name}__isnull": True}
+                    )
+                else:
+                    qry = MultiPrimitiveTestModel.objects.filter(**{field.name: value})
 
-                    self.assertEqual(qry.count(), 1)
-                    self.assertEqual(getattr(qry.first(), field.name), value)
+                self.assertEqual(qry.count(), 1)
+                self.assertEqual(getattr(qry.first(), field.name), value)
 
         MultiPrimitiveTestModel.objects.all().delete()
 
@@ -157,18 +156,17 @@ class ConstraintTests(EnumTypeMixin, TestCase):
                 ("NULL",),
             ),  # null=false still honored when unconstrained
         ]:
-            with connection.cursor() as cursor:
-                for value in vals:
-                    # TODO it seems like Oracle allows nulls to be inserted
-                    #   directly when null=False??
-                    if (
-                        field == multi_unconstrained_non_strict
-                        and value == "NULL"
-                        and connection.vendor == "oracle"
-                    ):
-                        continue
-                    with self.assertRaises(IntegrityError):
-                        do_insert(cursor, field, value)
+            for value in vals:
+                # TODO it seems like Oracle allows nulls to be inserted
+                #   directly when null=False??
+                if (
+                    field == multi_unconstrained_non_strict
+                    and value == "NULL"
+                    and connection.vendor == "oracle"
+                ):
+                    continue
+                with self.assertRaises(IntegrityError):
+                    do_insert(field, value)
 
         for field, vals in [
             (
@@ -181,17 +179,16 @@ class ConstraintTests(EnumTypeMixin, TestCase):
                 ),
             ),
         ]:
-            with connection.cursor() as cursor:
-                for insert, value in vals:
-                    MultiPrimitiveTestModel.objects.all().delete()
+            for insert, value in vals:
+                MultiPrimitiveTestModel.objects.all().delete()
 
-                    do_insert(cursor, field, insert)
+                do_insert(field, insert)
 
-                    qry = MultiPrimitiveTestModel.objects.raw(
-                        f"SELECT * FROM {table_name} WHERE {field.column} = {insert}"
-                    )
-                    with self.assertRaises(ValueError):
-                        qry[0]
+                qry = MultiPrimitiveTestModel.objects.raw(
+                    f"SELECT * FROM {table_name} WHERE {field.column} = {insert}"
+                )
+                with self.assertRaises(ValueError):
+                    qry[0]
 
         for field, vals in [
             (
@@ -204,21 +201,20 @@ class ConstraintTests(EnumTypeMixin, TestCase):
                 ),
             ),
         ]:
-            with connection.cursor() as cursor:
-                for insert, value in vals:
-                    MultiPrimitiveTestModel.objects.all().delete()
+            for insert, value in vals:
+                MultiPrimitiveTestModel.objects.all().delete()
 
-                    do_insert(cursor, field, insert)
+                do_insert(field, insert)
 
-                    self.assertEqual(
-                        getattr(
-                            MultiPrimitiveTestModel.objects.filter(
-                                **{field.name: value}
-                            ).first(),
-                            multi_unconstrained_non_strict.name,
-                        ),
-                        value,
-                    )
+                self.assertEqual(
+                    getattr(
+                        MultiPrimitiveTestModel.objects.filter(
+                            **{field.name: value}
+                        ).first(),
+                        multi_unconstrained_non_strict.name,
+                    ),
+                    value,
+                )
 
     def constraint_check(self, Model, field, values):
         from django.db.models.fields import NOT_PROVIDED
@@ -226,43 +222,45 @@ class ConstraintTests(EnumTypeMixin, TestCase):
 
         table_name = Model._meta.db_table
 
-        def do_insert(db_cursor, db_field, db_insert):
-            columns = [db_field.column]
-            values = [db_insert]
-            for field in Model._meta.fields:
-                if field is not db_field and field.default not in [
-                    NOT_PROVIDED,
-                    None,
-                ]:
-                    columns.append(field.column)
-                    values.append(str(getattr(field.default, "value", field.default)))
+        def do_insert(db_field, db_insert):
+            with connection.cursor() as db_cursor:
+                columns = [db_field.column]
+                values = [db_insert]
+                for field in Model._meta.fields:
+                    if field is not db_field and field.default not in [
+                        NOT_PROVIDED,
+                        None,
+                    ]:
+                        columns.append(field.column)
+                        values.append(
+                            str(getattr(field.default, "value", field.default))
+                        )
 
-            with transaction.atomic():
-                return db_cursor.execute(
-                    f"INSERT INTO {table_name} ({','.join(columns)}) VALUES "
-                    f"({','.join(values)})"
-                )
+                with transaction.atomic():
+                    db_cursor.execute(
+                        f"INSERT INTO {table_name} ({','.join(columns)}) VALUES "
+                        f"({','.join(values)})"
+                    )
 
-        with connection.cursor() as cursor:
-            for insert, value in values:
-                Model.objects.all().delete()
+        for insert, value in values:
+            Model.objects.all().delete()
 
-                if value is IntegrityError:
-                    with self.assertRaises(IntegrityError):
-                        do_insert(cursor, field, insert)
-                    continue
+            if value is IntegrityError:
+                with self.assertRaises(IntegrityError):
+                    do_insert(field, insert)
+                continue
 
-                do_insert(cursor, field, insert)
+            do_insert(field, insert)
 
-                if value == "NULL":
-                    qry = Model.objects.filter(**{f"{field.name}__isnull": True})
-                else:
-                    qry = Model.objects.filter(**{field.name: value})
+            if value == "NULL":
+                qry = Model.objects.filter(**{f"{field.name}__isnull": True})
+            else:
+                qry = Model.objects.filter(**{field.name: value})
 
-                self.assertEqual(qry.count(), 1)
+            self.assertEqual(qry.count(), 1)
 
-                self.assertEqual(getattr(qry.first(), field.name), value)
-                self.assertIsInstance(getattr(qry.first(), field.name), value.__class__)
+            self.assertEqual(getattr(qry.first(), field.name), value)
+            self.assertIsInstance(getattr(qry.first(), field.name), value.__class__)
 
     def test_default_flag_constraints(self):
         from tests.constraints.enums import IntFlagEnum

@@ -268,7 +268,7 @@ validate_version VERSION:
     assert raw_version == django_enum.__version__
     print(raw_version)
 
-# issue a relase for the given semver string (e.g. 2.1.0)
+# issue a release for the given semver string (e.g. 2.1.0)
 release VERSION:
     @just validate_version v{{ VERSION }}
     git tag -s v{{ VERSION }} -m "{{ VERSION }} Release"

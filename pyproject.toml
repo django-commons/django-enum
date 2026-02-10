@@ -23,7 +23,6 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Development Status :: 5 - Production/Stable",
     "Framework :: Django :: 4.2",
-    "Framework :: Django :: 5.1",
     "Framework :: Django :: 5.2",
     "Framework :: Django :: 6.0",
     "Intended Audience :: Developers",
@@ -59,8 +58,7 @@ packages = ["src/django_enum"]
 
 [project.optional-dependencies]
 properties = [
-    "enum-properties>=2.3.0; python_version < '3.14'",
-    "enum-properties>=2.4.0; python_version >= '3.14'",
+    "enum-properties>=2.5.1"
 ]
 filters = ["django-filter>=21"]
 rest = ["djangorestframework>=3.9,<4.0"]
@@ -100,7 +98,7 @@ dev = [
     "pytest-env>=1.1.5",
     "pytest-playwright>=0.7.0",
     "python-dateutil>=2.9.0.post0",
-    "ruff>=0.9.7",
+    "ruff>=0.15.0",
     "tomlkit>=0.13.2",
     "tqdm>=4.67.1",
     "types-pyyaml>=6.0.12.20241230",
@@ -187,6 +185,7 @@ exclude = [
     "examples",
     "plot_benchmarks.py"
 ]
+target-version = "py310"
 
 [tool.ruff.lint]
 exclude = ["tests/**/*"]
