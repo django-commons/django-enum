@@ -2,6 +2,8 @@
 Support for :doc:`django-filter <django-filter:index>`.
 """
 
+from __future__ import annotations
+
 import typing as t
 from enum import Enum, Flag
 
@@ -133,7 +135,7 @@ class EnumFlagFilter(TypedMultipleChoiceFilter):
     enum: type[Flag]
     field_class = EnumFlagField
 
-    parent: "FilterSet" | None = None
+    parent: FilterSet | None = None
 
     def __init__(
         self,
