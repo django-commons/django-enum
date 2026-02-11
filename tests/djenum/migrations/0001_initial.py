@@ -1340,7 +1340,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="testnullablefloat",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     (
                         "nullable_float__in",
                         [None, 3.141592653589793, 2.71828, 1.618033988749895],
@@ -1354,28 +1354,28 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nullblankformtester",
             constraint=CheckConstraint(
-                check=models.Q(("required__in", [1, 2, 3])),
+                condition=models.Q(("required__in", [1, 2, 3])),
                 name="tests_djenum_NullBlankFormTester_required_ExternEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="nullblankformtester",
             constraint=CheckConstraint(
-                check=models.Q(("required_default__in", [1, 2, 3])),
+                condition=models.Q(("required_default__in", [1, 2, 3])),
                 name="tests_djenum_NullBlankFormTester_required_default_ExternEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="nullblankformtester",
             constraint=CheckConstraint(
-                check=models.Q(("blank__in", [1, 2, 3])),
+                condition=models.Q(("blank__in", [1, 2, 3])),
                 name="tests_djenum_NullBlankFormTester_blank_ExternEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="nullblankformtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("blank_nullable__in", [1, 2, 3]),
                     ("blank_nullable__isnull", True),
                     _connector="OR",
@@ -1386,7 +1386,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nullblankformtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("blank_nullable_default__in", [1, 2, 3]),
                     ("blank_nullable_default__isnull", True),
                     _connector="OR",
@@ -1397,7 +1397,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nullablestrformtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("required__in", [None, "str1", "str2"]),
                     ("required__isnull", True),
                     _connector="OR",
@@ -1408,7 +1408,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nullablestrformtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("required_default__in", [None, "str1", "str2"]),
                     ("required_default__isnull", True),
                     _connector="OR",
@@ -1419,7 +1419,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nullablestrformtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("blank__in", [None, "str1", "str2"]),
                     ("blank__isnull", True),
                     _connector="OR",
@@ -1430,7 +1430,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nullablestrformtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("blank_nullable__in", [None, "str1", "str2"]),
                     ("blank_nullable__isnull", True),
                     _connector="OR",
@@ -1441,7 +1441,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nullablestrformtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("blank_nullable_default__in", [None, "str1", "str2"]),
                     ("blank_nullable_default__isnull", True),
                     _connector="OR",
@@ -1452,7 +1452,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nullableblankformtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("required__in", [None, 1, 2, 3]),
                     ("required__isnull", True),
                     _connector="OR",
@@ -1463,7 +1463,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nullableblankformtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("required_default__in", [None, 1, 2, 3]),
                     ("required_default__isnull", True),
                     _connector="OR",
@@ -1474,7 +1474,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nullableblankformtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("blank__in", [None, 1, 2, 3]),
                     ("blank__isnull", True),
                     _connector="OR",
@@ -1485,7 +1485,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nullableblankformtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("blank_nullable__in", [None, 1, 2, 3]),
                     ("blank_nullable__isnull", True),
                     _connector="OR",
@@ -1496,7 +1496,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nullableblankformtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("blank_nullable_default__in", [None, 1, 2, 3]),
                     ("blank_nullable_default__isnull", True),
                     _connector="OR",
@@ -1507,7 +1507,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="nameoverridetest",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("enum_field__in", ["V0", "V1", "V2"]),
                     ("enum_field__isnull", True),
                     _connector="OR",
@@ -1518,7 +1518,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="multiprimitivetestmodel",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("multi__in", ["1", "2.0", "3.0", "4.5"]),
                     ("multi__isnull", True),
                     _connector="OR",
@@ -1529,7 +1529,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="multiprimitivetestmodel",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("multi_float__in", [1.0, 2.0, 3.0, 4.5]),
                     ("multi_float__isnull", True),
                     _connector="OR",
@@ -1540,7 +1540,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="multiprimitivetestmodel",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("multi_none__in", [None, "1", "2.0", "3.0", "4.5"]),
                     ("multi_none__isnull", True),
                     _connector="OR",
@@ -1551,7 +1551,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("small_pos_int__in", [0, 2, 32767]),
                     ("small_pos_int__isnull", True),
                     _connector="OR",
@@ -1562,21 +1562,21 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(("small_int__in", [-32768, 0, 1, 2, 32767])),
+                condition=models.Q(("small_int__in", [-32768, 0, 1, 2, 32767])),
                 name="tests_djenum_EnumTester_small_int_SmallIntEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(("pos_int__in", [0, 1, 2, 2147483647])),
+                condition=models.Q(("pos_int__in", [0, 1, 2, 2147483647])),
                 name="tests_djenum_EnumTester_pos_int_PosIntEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("int__in", [-2147483648, 0, 1, 2, 2147483647]),
                     ("int__isnull", True),
                     _connector="OR",
@@ -1587,7 +1587,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("big_pos_int__in", [0, 1, 2, 2147483648]),
                     ("big_pos_int__isnull", True),
                     _connector="OR",
@@ -1598,14 +1598,14 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(("big_int__in", [-2147483649, 1, 2, 2147483648])),
+                condition=models.Q(("big_int__in", [-2147483649, 1, 2, 2147483648])),
                 name="tests_djenum_EnumTester_big_int_BigIntEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("constant__in", [3.141592653589793, 2.71828, 1.618033988749895]),
                     ("constant__isnull", True),
                     _connector="OR",
@@ -1616,7 +1616,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("text__in", ["V1", "V22", "V333", "D"]),
                     ("text__isnull", True),
                     _connector="OR",
@@ -1627,7 +1627,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("extern__in", [1, 2, 3]), ("extern__isnull", True), _connector="OR"
                 ),
                 name="tests_djenum_EnumTester_extern_ExternEnum",
@@ -1636,21 +1636,21 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(("dj_int_enum__in", [1, 2, 3])),
+                condition=models.Q(("dj_int_enum__in", [1, 2, 3])),
                 name="tests_djenum_EnumTester_dj_int_enum_DJIntEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(("dj_text_enum__in", ["A", "B", "C"])),
+                condition=models.Q(("dj_text_enum__in", ["A", "B", "C"])),
                 name="tests_djenum_EnumTester_dj_text_enum_DJTextEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("no_coerce__in", [0, 2, 32767]),
                     ("no_coerce__isnull", True),
                     _connector="OR",
@@ -1661,7 +1661,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     (
                         "date_enum__in",
                         [
@@ -1677,7 +1677,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     (
                         "time_enum__in",
                         [
@@ -1695,7 +1695,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     (
                         "duration_enum__in",
                         [
@@ -1713,7 +1713,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="enumtester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     (
                         "decimal_enum__in",
                         [
@@ -1738,14 +1738,14 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="emptyenumvaluetester",
             constraint=CheckConstraint(
-                check=models.Q(("blank_text_enum__in", ["", "V22"])),
+                condition=models.Q(("blank_text_enum__in", ["", "V22"])),
                 name="tests_djenum_EmptyEnumValueTester_blank_text_enum_BlankTextEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="emptyenumvaluetester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("none_int_enum__in", [None, 2]),
                     ("none_int_enum__isnull", True),
                     _connector="OR",
@@ -1756,7 +1756,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="emptyenumvaluetester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("none_int_enum_non_null__in", [None, 2]),
                     ("none_int_enum_non_null__isnull", True),
                     _connector="OR",
@@ -1767,21 +1767,23 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="customprimitivetestmodel",
             constraint=CheckConstraint(
-                check=models.Q(("path__in", ["/usr", "/usr/local", "/usr/local/bin"])),
+                condition=models.Q(
+                    ("path__in", ["/usr", "/usr/local", "/usr/local/bin"])
+                ),
                 name="tests_djenum_CustomPrimitiveTestModel_path_PathEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="customprimitivetestmodel",
             constraint=CheckConstraint(
-                check=models.Q(("str_props__in", ["str1", "str2", "str3"])),
+                condition=models.Q(("str_props__in", ["str1", "str2", "str3"])),
                 name="tests_djenum_CustomPrimitiveTestModel_str_props_StrPropsEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="bug53tester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("char_blank_null_true__in", ["v1", "v2", "v3"]),
                     ("char_blank_null_true__isnull", True),
                     _connector="OR",
@@ -1792,21 +1794,21 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="bug53tester",
             constraint=CheckConstraint(
-                check=models.Q(("char_blank_null_false__in", ["v1", "v2", "v3"])),
+                condition=models.Q(("char_blank_null_false__in", ["v1", "v2", "v3"])),
                 name="tests_djenum_Bug53Tester_char_blank_null_false_StrTestEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="bug53tester",
             constraint=CheckConstraint(
-                check=models.Q(("int_blank_null_false__in", [1, 2, 3])),
+                condition=models.Q(("int_blank_null_false__in", [1, 2, 3])),
                 name="tests_djenum_Bug53Tester_int_blank_null_false_ExternEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="bug53tester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("int_blank_null_true__in", [1, 2, 3]),
                     ("int_blank_null_true__isnull", True),
                     _connector="OR",
@@ -1817,7 +1819,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="baddefault",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("non_strict_int__in", [0, 2, 32767]),
                     ("non_strict_int__isnull", True),
                     _connector="OR",
@@ -1828,14 +1830,14 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="altwidgettester",
             constraint=CheckConstraint(
-                check=models.Q(("text__in", ["V1", "V22", "V333", "D"])),
+                condition=models.Q(("text__in", ["V1", "V22", "V333", "D"])),
                 name="tests_djenum_AltWidgetTester_text_TextEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="altwidgettester",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("text_null__in", ["V1", "V22", "V333", "D"]),
                     ("text_null__isnull", True),
                     _connector="OR",
@@ -1846,21 +1848,21 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="admindisplaybug35",
             constraint=CheckConstraint(
-                check=models.Q(("text_enum__in", ["V1", "V22", "V333", "D"])),
+                condition=models.Q(("text_enum__in", ["V1", "V22", "V333", "D"])),
                 name="tests_djenum_AdminDisplayBug35_text_enum_TextEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="admindisplaybug35",
             constraint=CheckConstraint(
-                check=models.Q(("int_enum__in", [0, 2, 32767])),
+                condition=models.Q(("int_enum__in", [0, 2, 32767])),
                 name="tests_djenum_AdminDisplayBug35_int_enum_SmallPosIntEnum",
             ),
         ),
         migrations.AddConstraint(
             model_name="admindisplaybug35",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("blank_int__in", [0, 2, 32767]),
                     ("blank_int__isnull", True),
                     _connector="OR",
@@ -1871,7 +1873,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="admindisplaybug35",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("blank_txt__in", ["V1", "V22", "V333", "D"]),
                     ("blank_txt__isnull", True),
                     _connector="OR",
@@ -1882,7 +1884,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="admindisplaybug35",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     (
                         "status_basic__in",
                         ["INIT", "LOADED", "ACTIVE", "DONE", "REJECTED", "CANCELLED"],
@@ -1896,7 +1898,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="admindisplaybug35",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("status_basic_int__in", [0, 1, 2, 3, 4, 5]),
                     ("status_basic_int__isnull", True),
                     _connector="OR",
@@ -1907,7 +1909,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="admindisplaybug35",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     ("status_int__in", [0, 1, 2, 3, 4, 5]),
                     ("status_int__isnull", True),
                     _connector="OR",
@@ -1918,7 +1920,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="admindisplaybug35",
             constraint=CheckConstraint(
-                check=models.Q(
+                condition=models.Q(
                     (
                         "status_str__in",
                         ["INIT", "LOADED", "ACTIVE", "DONE", "REJECTED", "CANCELLED"],
