@@ -93,6 +93,9 @@ intersphinx_mapping = {
 
 linkcheck_allow_redirects = True
 
+# Use legacy class-based autodoc implementation
+autodoc_use_legacy_class_based = True
+
 
 def setup(app):
     # Register a sphinx.ext.autodoc.between listener to ignore everything

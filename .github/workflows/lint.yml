@@ -76,7 +76,6 @@ jobs:
           else
             just test-lock Django~=${{ matrix.django-version }}.0
           fi
-          just install-docs
       - name: Install Emacs
         if: ${{ github.event.inputs.debug == 'true' }}
         run: |
@@ -89,7 +88,6 @@ jobs:
         timeout-minutes: 60
       - name: Run Static Analysis
         run: |
-          just manage makemigrations
           just test ./tests/test_verify_environment.py
           just check-lint
           just check-format
