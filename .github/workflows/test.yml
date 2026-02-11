@@ -10,11 +10,20 @@ on:
     branches: ['main']
   pull_request:
     branches: ['main']
+  merge_group:
   workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        required: true
   workflow_dispatch:
     inputs:
       debug:
         description: 'Open ssh debug session.'
+        required: true
+        default: false
+        type: boolean
+      clear_cache:
+        description: 'Clear GitHub Tool cache.'
         required: true
         default: false
         type: boolean
@@ -108,22 +117,25 @@ jobs:
           - 5432:5432
 
     steps:
-    - uses: actions/checkout@v6
+    - name: Clear Tool cache
+      if: ${{ github.event.inputs.clear_cache == 'true' }}
+      run: sudo rm -rf /opt/hostedtoolcache
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
     - name: Set up Python ${{ matrix.python-version }}
       id: sp
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
       with:
         python-version: ${{ matrix.python-version }}
         allow-prereleases: true
     - name: Install uv
-      uses: astral-sh/setup-uv@v7
+      uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b
       with:
         enable-cache: true
     - name: Upgrade all dependencies for our weekly runs
       if: github.event_name == 'schedule'
       run: uv lock --upgrade
     - name: Setup Just
-      uses: extractions/setup-just@v3
+      uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
     - name: Install Release Dependencies
       shell: bash
       run: |
@@ -139,7 +151,7 @@ jobs:
         sudo apt install emacs
     - name: Setup tmate session
       if: ${{ github.event.inputs.debug == 'true' }}
-      uses: mxschmitt/action-tmate@v3.23
+      uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101
       with:
         detached: true
       timeout-minutes: 60
@@ -147,7 +159,7 @@ jobs:
       run: |
         just test-all ${{ matrix.psycopg-version }}
     - name: Store coverage files
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
       with:
         name: ${{ env.COVERAGE_FILE }}
         path: ${{ env.COVERAGE_FILE }}
@@ -189,22 +201,25 @@ jobs:
             django-version: '6.0'
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Clear Tool cache
+        if: ${{ github.event.inputs.clear_cache == 'true' }}
+        run: sudo rm -rf /opt/hostedtoolcache
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b
         with:
           enable-cache: true
       - name: Upgrade all dependencies for our weekly runs
         if: github.event_name == 'schedule'
         run: uv lock --upgrade
       - name: Setup Just
-        uses: extractions/setup-just@v3
+        uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
       - name: Install Release Dependencies
         run: |
           just setup ${{ steps.sp.outputs.python-path }}
@@ -220,7 +235,7 @@ jobs:
           sudo apt install emacs
       - name: Setup tmate session
         if: ${{ github.event.inputs.debug == 'true' }}
-        uses: mxschmitt/action-tmate@v3.23
+        uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101
         with:
           detached: true
         timeout-minutes: 60
@@ -228,7 +243,7 @@ jobs:
         run: |
           just test-all
       - name: Store coverage files
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
@@ -304,9 +319,12 @@ jobs:
           - 3306:3306
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Clear Tool cache
+        if: ${{ github.event.inputs.clear_cache == 'true' }}
+        run: sudo rm -rf /opt/hostedtoolcache
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
@@ -317,19 +335,19 @@ jobs:
           sudo apt install emacs
       - name: Setup tmate session
         if: ${{ github.event.inputs.debug == 'true' }}
-        uses: mxschmitt/action-tmate@v3.23
+        uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101
         with:
           detached: true
         timeout-minutes: 60
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b
         with:
           enable-cache: true
       - name: Upgrade all dependencies for our weekly runs
         if: github.event_name == 'schedule'
         run: uv lock --upgrade
       - name: Setup Just
-        uses: extractions/setup-just@v3
+        uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
       - name: Install Release Dependencies
         shell: bash
         run: |
@@ -347,7 +365,7 @@ jobs:
         run: |
           just test-all mysql
       - name: Store coverage files
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
@@ -432,9 +450,12 @@ jobs:
           - 3306:3306
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Clear Tool cache
+        if: ${{ github.event.inputs.clear_cache == 'true' }}
+        run: sudo rm -rf /opt/hostedtoolcache
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
@@ -445,19 +466,19 @@ jobs:
           sudo apt install emacs
       - name: Setup tmate session
         if: ${{ github.event.inputs.debug == 'true' }}
-        uses: mxschmitt/action-tmate@v3.23
+        uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101
         with:
           detached: true
         timeout-minutes: 60
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b
         with:
           enable-cache: true
       - name: Upgrade all dependencies for our weekly runs
         if: github.event_name == 'schedule'
         run: uv lock --upgrade
       - name: Setup Just
-        uses: extractions/setup-just@v3
+        uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
       - name: Install Release Dependencies
         run: |
           just setup ${{ steps.sp.outputs.python-path }}
@@ -474,7 +495,7 @@ jobs:
         run: |
           just test-all mysql
       - name: Store coverage files
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
@@ -543,6 +564,9 @@ jobs:
           --health-retries 10
 
     steps:
+      - name: Clear Tool cache
+        if: ${{ github.event.inputs.clear_cache == 'true' }}
+        run: sudo rm -rf /opt/hostedtoolcache
       - name: Set coverage file
         run: |
           ORACLE_TAG=$(echo "${{ matrix.oracle-version }}" | cut -d':' -f2)
@@ -552,10 +576,10 @@ jobs:
           else
             echo "ORACLE_DATABASE=FREEPDB1" >> $GITHUB_ENV
           fi
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Set up Python ${{ matrix.python-version }}
         id: sp
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
@@ -565,19 +589,19 @@ jobs:
           sudo apt install emacs
       - name: Setup tmate session
         if: ${{ github.event.inputs.debug == 'true' }}
-        uses: mxschmitt/action-tmate@v3.23
+        uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101
         with:
           detached: true
         timeout-minutes: 60
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b
         with:
           enable-cache: true
       - name: Upgrade all dependencies for our weekly runs
         if: github.event_name == 'schedule'
         run: uv lock --upgrade
       - name: Setup Just
-        uses: extractions/setup-just@v3
+        uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
       - name: Install Oracle Client
         # https://askubuntu.com/questions/1512196/libaio1-on-noble
         run: |
@@ -609,7 +633,7 @@ jobs:
             just test-all oracledb
           fi
       - name: Store coverage files
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
@@ -651,22 +675,25 @@ jobs:
             django-version: '6.0'
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Clear Tool cache
+        if: ${{ github.event.inputs.clear_cache == 'true' }}
+        run: sudo rm -rf /opt/hostedtoolcache
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b
         with:
           enable-cache: true
       - name: Upgrade all dependencies for our weekly runs
         if: github.event_name == 'schedule'
         run: uv lock --upgrade
       - name: Setup Just
-        uses: extractions/setup-just@v3
+        uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
       - name: Install Release Dependencies
         run: |
           just setup ${{ steps.sp.outputs.python-path }}
@@ -681,10 +708,10 @@ jobs:
         shell: pwsh
       - name: install-vim-windows
         if: ${{ github.event.inputs.debug == 'true' }}
-        uses: rhysd/action-setup-vim@v1
+        uses: rhysd/action-setup-vim@19e3dd31a84dbc2c5445d65e9b363f616cab96c1
       - name: Setup tmate session
         if: ${{ github.event.inputs.debug == 'true' }}
-        uses: mxschmitt/action-tmate@v3.23
+        uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101
         with:
           detached: true
         timeout-minutes: 60
@@ -692,7 +719,7 @@ jobs:
         run: |
           just test-all
       - name: Store coverage files
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
@@ -734,22 +761,25 @@ jobs:
             django-version: '6.0'
 
     steps:
-      - uses: actions/checkout@v6
+      - name: Clear Tool cache
+        if: ${{ github.event.inputs.clear_cache == 'true' }}
+        run: sudo rm -rf /opt/hostedtoolcache
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b
         with:
           enable-cache: true
       - name: Upgrade all dependencies for our weekly runs
         if: github.event_name == 'schedule'
         run: uv lock --upgrade
       - name: Setup Just
-        uses: extractions/setup-just@v3
+        uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
       - name: Install Release Dependencies
         run: |
           just setup ${{ steps.sp.outputs.python-path }}
@@ -765,7 +795,7 @@ jobs:
           brew install emacs
       - name: Setup tmate session
         if: ${{ github.event.inputs.debug == 'true' }}
-        uses: mxschmitt/action-tmate@v3.23
+        uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101
         with:
           detached: true
         timeout-minutes: 60
@@ -773,7 +803,7 @@ jobs:
         run: |
           just test-all
       - name: Store coverage files
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
@@ -785,27 +815,30 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - name: Clear Tool cache
+        if: ${{ github.event.inputs.clear_cache == 'true' }}
+        run: sudo rm -rf /opt/hostedtoolcache
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         id: sp
         with:
           python-version: '3.12'
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@eac588ad8def6316056a12d4907a9d4d84ff7a3b
         with:
           enable-cache: true
       - name: Upgrade all dependencies for our weekly runs
         if: github.event_name == 'schedule'
         run: uv lock --upgrade
       - name: Setup Just
-        uses: extractions/setup-just@v3
+        uses: extractions/setup-just@e33e0265a09d6d736e2ee1e0eb685ef1de4669ff
       - name: Install Release Dependencies
         run: |
           just setup ${{ steps.sp.outputs.python-path }}
           just install
 
       - name: Get coverage files
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
           pattern: "*.coverage"
           merge-multiple: true
@@ -813,7 +846,7 @@ jobs:
       - run: just coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files:
