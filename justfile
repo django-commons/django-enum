@@ -231,6 +231,10 @@ check-all: check check-docs-links
 # regenerate test migrations using the lowest version of Django
 remake-test-migrations:
     - rm tests/**/migrations/00*.py
+    @just make-test-migrations
+
+# make test migrations
+make-test-migrations:
     uv run --no-default-groups  --exact --isolated --resolution lowest-direct --all-extras --group test django-admin makemigrations
 
 # run all tests
