@@ -90,7 +90,7 @@ class EnumField(ChoiceField):
     enum: Type[Enum]
     primitive: Type[Any]
     strict: bool = True
-    primitive_field: Optional[Type[Field]] = None
+    primitive_field: Optional[Field] = None
 
     def __init__(self, enum: Type[Enum], strict: bool = strict, **kwargs):
         self.enum = enum
@@ -145,7 +145,7 @@ class EnumField(ChoiceField):
                 self.primitive_field = primitive_field_cls(**field_kwargs)
         super().__init__(choices=self.choices, **kwargs)
 
-    def to_internal_value(self, data: Any) -> Union[Enum, Any]:
+    def to_internal_value(self, data: Any) -> Union[Enum, Any]:  # type: ignore[override]
         """
         Transform the *incoming* primitive data into an enum instance.
 
@@ -207,7 +207,7 @@ class FlagField(MultipleChoiceField):
         kwargs.pop("model_field", None)
         super().__init__(choices=self.choices, **kwargs)
 
-    def to_internal_value(self, data: Any) -> Union[Enum, Any]:
+    def to_internal_value(self, data: Any) -> Union[Enum, Any]:  # type: ignore[override]
         """
         Transform the *incoming* primitive data into an enum instance.
         We accept a composite flag value or a list of values. If a list,

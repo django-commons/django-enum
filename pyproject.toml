@@ -2,7 +2,7 @@
 name = "django-enum"
 version = "2.3.0"
 description = "Full and natural support for enumerations as Django model fields."
-requires-python = "==3.10.17"
+requires-python = ">=3.10,<4.0"
 authors = [
   {name = "Brian Kohan", email = "bckohan@gmail.com"},
 ]
@@ -16,7 +16,7 @@ keywords = [
     "bitmask", "mask", "bitfield", "flags"
 ]
 dependencies = [
-    "django~=4.2",
+    "django>=4.2,<6.1",
 ]
 classifiers = [
     "Environment :: Console",
@@ -155,11 +155,34 @@ dev = [
 # allow_redefinition = false
 check_untyped_defs = true
 ignore_missing_imports = true
-exclude = ["tests"]
 plugins = ["mypy_django_plugin.main"]
+mypy_path = ["src"]
+files = [
+  "src/django_enum/**/*.py",
+]
 
 [tool.django-stubs]
 django_settings_module = "tests.settings"
+
+
+[tool.pyright]
+pythonVersion = "3.10"
+typeCheckingMode = "basic"
+include = ["src/django_enum"]
+exclude = [
+  "tests/**",
+]
+reportMissingImports = true
+reportMissingTypeStubs = false
+reportUnusedImport = true
+reportUnusedClass = false
+reportUnusedFunction = false
+reportUnusedVariable = true
+reportDuplicateImport = true
+reportOptionalMemberAccess = false
+reportGeneralTypeIssues = false
+reportOptionalSubscript = false
+reportPrivateImportUsage = false
 
 
 # todo doc8 configuration here is not being picked up and doesnt seem to be working
