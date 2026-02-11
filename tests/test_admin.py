@@ -96,6 +96,8 @@ class _GenericAdminFormTest(StaticLiveServerTestCase):
 
     pytestmark = pytest.mark.ui
 
+    record_screenshots = False
+
     def enum(self, field: str) -> t.Type[Enum]:
         enum = t.cast(EnumField, self.MODEL_CLASS._meta.get_field(field)).enum
         assert enum
@@ -138,6 +140,7 @@ class _GenericAdminFormTest(StaticLiveServerTestCase):
         """Set up the test class with a live server and Playwright instance."""
         os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "1"
         super().setUpClass()
+        # cls.record_screenshots = pytest.Config.getoption("--record-screenshots")
         cls.playwright = sync_playwright().start()
         cls.browser = cls.playwright.chromium.launch(headless=cls.HEADLESS)
         cls.page = cls.browser.new_page()

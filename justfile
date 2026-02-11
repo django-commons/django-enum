@@ -278,6 +278,14 @@ coverage:
 run +ARGS:
     uv run {{ ARGS }}
 
+# run the tests and capture screenshots for the docs
+generate-screenshots *TESTS:
+    @just run --no-default-groups --all-extras --group test --exact --isolated pytest --record-screenshots -m screenshots {{ TESTS }}
+
+# revert screenshots to HEAD
+revert-screenshots:
+    git checkout doc/source/widgets/*.png
+
 # validate the given version string against the lib version
 [script]
 validate_version VERSION:

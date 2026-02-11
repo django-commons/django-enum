@@ -808,6 +808,8 @@ class _WidgetDemoTest(_GenericAdminFormTest):
 
     WIDTH_ADJUST = -600
 
+    pytestmark = pytest.mark.screenshots
+
     def image_name(self, field: str):
         admin_instance = admin.site._registry.get(self.MODEL_CLASS)
         form_class = admin_instance.get_form(None)
@@ -819,6 +821,8 @@ class _WidgetDemoTest(_GenericAdminFormTest):
         """
         Use playwright to take a screenshot of the admin change form for the object.
         """
+        if not self.record_screenshots:
+            return
         url = self.change_url(obj.pk)
         self.page.goto(url)
         # Take a picture of the form for the permissions

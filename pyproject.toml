@@ -2,7 +2,7 @@
 name = "django-enum"
 version = "2.3.0"
 description = "Full and natural support for enumerations as Django model fields."
-requires-python = ">=3.10,<4.0"
+requires-python = "==3.10.17"
 authors = [
   {name = "Brian Kohan", email = "bckohan@gmail.com"},
 ]
@@ -16,7 +16,7 @@ keywords = [
     "bitmask", "mask", "bitfield", "flags"
 ]
 dependencies = [
-    "django>=4.2,<6.1",
+    "django~=4.2",
 ]
 classifiers = [
     "Environment :: Console",
@@ -186,6 +186,7 @@ addopts = [
 ]
 markers = [
   "ui: browser-based tests",
+  "screenshots: tests that generate screenshots of the admin interface for documentation purposes"
 ]
 
 [tool.coverage.run]

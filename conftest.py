@@ -5,6 +5,25 @@ import sys
 import pytest
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--record-screenshots",
+        action="store_true",
+        default=False,
+        help="Record screenshots for the documentation",
+    )
+
+
+@pytest.fixture(autouse=True)
+def inject_pytest_options(pytestconfig, request):
+    # Only apply to tests marked with @pytest.mark.screenshots
+    if (
+        request.cls is not None
+        and request.node.get_closest_marker("screenshots") is not None
+    ):
+        request.cls.record_screenshots = pytestconfig.getoption("--record-screenshots")
+
+
 def pytest_configure(config):
     # stash it somewhere global-ish
     import tests

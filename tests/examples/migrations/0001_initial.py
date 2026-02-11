@@ -6,6 +6,7 @@ import django.db.models.deletion
 import django_enum.fields
 import pathlib
 import tests.examples.models.custom_value
+from tests.compat import CheckConstraint
 
 
 class Migration(migrations.Migration):
@@ -187,47 +188,47 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name='widgetdemostrict',
-            constraint=models.CheckConstraint(condition=models.Q(('color__in', ['R', 'G', 'B'])), name='tests_examples_WidgetDemoStrict_color_Color'),
+            constraint=CheckConstraint(condition=models.Q(('color__in', ['R', 'G', 'B'])), name='tests_examples_WidgetDemoStrict_color_Color'),
         ),
         migrations.AddConstraint(
             model_name='widgetdemoradiosandchecksnulls',
-            constraint=models.CheckConstraint(condition=models.Q(('color__in', ['R', 'G', 'B']), ('color__isnull', True), _connector='OR'), name='tests_examples_WidgetDemoRadiosAndChecksNulls_color_Color'),
+            constraint=CheckConstraint(condition=models.Q(('color__in', ['R', 'G', 'B']), ('color__isnull', True), _connector='OR'), name='tests_examples_WidgetDemoRadiosAndChecksNulls_color_Color'),
         ),
         migrations.AddConstraint(
             model_name='textchoicesexample',
-            constraint=models.CheckConstraint(condition=models.Q(('color__in', ['R', 'G', 'B'])), name='tests_examples_TextChoicesExample_color_Color'),
+            constraint=CheckConstraint(condition=models.Q(('color__in', ['R', 'G', 'B'])), name='tests_examples_TextChoicesExample_color_Color'),
         ),
         migrations.AddConstraint(
             model_name='propertyexample',
-            constraint=models.CheckConstraint(condition=models.Q(('color__in', ['R', 'G', 'B'])), name='tests_examples_PropertyExample_color_Color'),
+            constraint=CheckConstraint(condition=models.Q(('color__in', ['R', 'G', 'B'])), name='tests_examples_PropertyExample_color_Color'),
         ),
         migrations.AddConstraint(
             model_name='pathvalueexample',
-            constraint=models.CheckConstraint(condition=models.Q(('path__in', ['/usr', '/usr/local', '/usr/local/bin'])), name='tests_examples_PathValueExample_path_PathEnum'),
+            constraint=CheckConstraint(condition=models.Q(('path__in', ['/usr', '/usr/local', '/usr/local/bin'])), name='tests_examples_PathValueExample_path_PathEnum'),
         ),
         migrations.AddConstraint(
             model_name='mixedvalueexample',
-            constraint=models.CheckConstraint(condition=models.Q(('eccentric_str__in', [None, '1', '2.0', '3.0', '4.5']), ('eccentric_str__isnull', True), _connector='OR'), name='tests_examples_MixedValueExample_eccentric_str_MixedValueEnum'),
+            constraint=CheckConstraint(condition=models.Q(('eccentric_str__in', [None, '1', '2.0', '3.0', '4.5']), ('eccentric_str__isnull', True), _connector='OR'), name='tests_examples_MixedValueExample_eccentric_str_MixedValueEnum'),
         ),
         migrations.AddConstraint(
             model_name='mixedvalueexample',
-            constraint=models.CheckConstraint(condition=models.Q(('eccentric_float__in', [None, 1.0, 2.0, 3.0, 4.5]), ('eccentric_float__isnull', True), _connector='OR'), name='tests_examples_MixedValueExample_eccentric_float_MixedValueEnum'),
+            constraint=CheckConstraint(condition=models.Q(('eccentric_float__in', [None, 1.0, 2.0, 3.0, 4.5]), ('eccentric_float__isnull', True), _connector='OR'), name='tests_examples_MixedValueExample_eccentric_float_MixedValueEnum'),
         ),
         migrations.AddConstraint(
             model_name='map',
-            constraint=models.CheckConstraint(condition=models.Q(('style__in', [1, 2, 3, 4, 5, 6, 7, 8])), name='tests_examples_Map_style_MapBoxStyle'),
+            constraint=CheckConstraint(condition=models.Q(('style__in', [1, 2, 3, 4, 5, 6, 7, 8])), name='tests_examples_Map_style_MapBoxStyle'),
         ),
         migrations.AddConstraint(
             model_name='hashequivalencyexample',
-            constraint=models.CheckConstraint(condition=models.Q(('not_hash_eq__in', ['V1', 'V2', 'V3'])), name='tests_examples_HashEquivalencyExample_not_hash_eq_NotHashEq'),
+            constraint=CheckConstraint(condition=models.Q(('not_hash_eq__in', ['V1', 'V2', 'V3'])), name='tests_examples_HashEquivalencyExample_not_hash_eq_NotHashEq'),
         ),
         migrations.AddConstraint(
             model_name='hashequivalencyexample',
-            constraint=models.CheckConstraint(condition=models.Q(('hash_eq__in', ['V1', 'V2', 'V3'])), name='tests_examples_HashEquivalencyExample_hash_eq_HashEq'),
+            constraint=CheckConstraint(condition=models.Q(('hash_eq__in', ['V1', 'V2', 'V3'])), name='tests_examples_HashEquivalencyExample_hash_eq_HashEq'),
         ),
         migrations.AddConstraint(
             model_name='hashequivalencyexample',
-            constraint=models.CheckConstraint(condition=models.Q(('hash_eq_str__in', ['V1', 'V2', 'V3'])), name='tests_examples_HashEquivalencyExample_hash_eq_str_HashEqStr'),
+            constraint=CheckConstraint(condition=models.Q(('hash_eq_str__in', ['V1', 'V2', 'V3'])), name='tests_examples_HashEquivalencyExample_hash_eq_str_HashEqStr'),
         ),
         migrations.AddIndex(
             model_name='gnssreceiverbasic',
@@ -235,30 +236,30 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name='externalchoices',
-            constraint=models.CheckConstraint(condition=models.Q(('txt_enum1__in', ['V0', 'V1', 'V2'])), name='tests_examples_ExternalChoices_txt_enum1_TextEnum'),
+            constraint=CheckConstraint(condition=models.Q(('txt_enum1__in', ['V0', 'V1', 'V2'])), name='tests_examples_ExternalChoices_txt_enum1_TextEnum'),
         ),
         migrations.AddConstraint(
             model_name='externalchoices',
-            constraint=models.CheckConstraint(condition=models.Q(('txt_enum2__in', ['V0', 'V1', 'V2'])), name='tests_examples_ExternalChoices_txt_enum2_TextEnum'),
+            constraint=CheckConstraint(condition=models.Q(('txt_enum2__in', ['V0', 'V1', 'V2'])), name='tests_examples_ExternalChoices_txt_enum2_TextEnum'),
         ),
         migrations.AddConstraint(
             model_name='equivalencyexample',
-            constraint=models.CheckConstraint(condition=models.Q(('txt_enum__in', ['V0', 'V1', 'V2']), ('txt_enum__isnull', True), _connector='OR'), name='tests_examples_EquivalencyExample_txt_enum_TextEnum'),
+            constraint=CheckConstraint(condition=models.Q(('txt_enum__in', ['V0', 'V1', 'V2']), ('txt_enum__isnull', True), _connector='OR'), name='tests_examples_EquivalencyExample_txt_enum_TextEnum'),
         ),
         migrations.AddConstraint(
             model_name='customvalueexample',
-            constraint=models.CheckConstraint(condition=models.Q(('str_props__in', ['str1', 'str2', 'str3'])), name='tests_examples_CustomValueExample_str_props_StrPropsEnum'),
+            constraint=CheckConstraint(condition=models.Q(('str_props__in', ['str1', 'str2', 'str3'])), name='tests_examples_CustomValueExample_str_props_StrPropsEnum'),
         ),
         migrations.AddConstraint(
             model_name='choiceswithproperties',
-            constraint=models.CheckConstraint(condition=models.Q(('color__in', ['R', 'G', 'B'])), name='tests_examples_ChoicesWithProperties_color_Color'),
+            constraint=CheckConstraint(condition=models.Q(('color__in', ['R', 'G', 'B'])), name='tests_examples_ChoicesWithProperties_color_Color'),
         ),
         migrations.AddConstraint(
             model_name='basicexample',
-            constraint=models.CheckConstraint(condition=models.Q(('txt_enum__in', ['V0', 'V1', 'V2']), ('txt_enum__isnull', True), _connector='OR'), name='tests_examples_BasicExample_txt_enum_TextEnum'),
+            constraint=CheckConstraint(condition=models.Q(('txt_enum__in', ['V0', 'V1', 'V2']), ('txt_enum__isnull', True), _connector='OR'), name='tests_examples_BasicExample_txt_enum_TextEnum'),
         ),
         migrations.AddConstraint(
             model_name='basicexample',
-            constraint=models.CheckConstraint(condition=models.Q(('int_enum__in', [1, 2, 3])), name='tests_examples_BasicExample_int_enum_IntEnum'),
+            constraint=CheckConstraint(condition=models.Q(('int_enum__in', [1, 2, 3])), name='tests_examples_BasicExample_int_enum_IntEnum'),
         ),
     ]
