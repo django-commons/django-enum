@@ -255,7 +255,7 @@ test-filters *TESTS:
     @just run --no-default-groups --extra filters --group test --exact --isolated pytest {{ TESTS }} --cov-append
 
 test *TESTS:
-    @just run --no-default-groups --exact --group test --isolated pytest {{ TESTS }} --cov-append
+    @just run --no-default-groups --exact --all-extras --group test --isolated pytest {{ TESTS }} --cov-append
 
 # debug an test
 debug-test *TESTS:

@@ -123,6 +123,7 @@ class TestEccentricEnums(TestCase):
         self.assertEqual(form_field3.primitive, str)
 
     def test_custom_primitive(self):
+        from pathlib import PurePosixPath
         from tests.djenum.enums import PathEnum, StrProps, StrPropsEnum
         from tests.djenum.models import CustomPrimitiveTestModel
 
@@ -139,7 +140,7 @@ class TestEccentricEnums(TestCase):
         self.assertEqual(obj2.str_props, StrPropsEnum.STR2)
 
         obj3 = CustomPrimitiveTestModel.objects.create(
-            path=Path("/usr/local/bin"), str_props=StrProps("str3")
+            path=PurePosixPath("/usr/local/bin"), str_props=StrProps("str3")
         )
         self.assertEqual(obj3.path, PathEnum.USR_LOCAL_BIN)
         self.assertEqual(obj3.str_props, StrPropsEnum.STR3)
@@ -154,7 +155,7 @@ class TestEccentricEnums(TestCase):
 
         self.assertEqual(
             obj3,
-            CustomPrimitiveTestModel.objects.get(path=Path("/usr/local/bin")),
+            CustomPrimitiveTestModel.objects.get(path=PurePosixPath("/usr/local/bin")),
         )
 
         self.assertEqual(
