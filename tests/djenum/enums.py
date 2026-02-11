@@ -1,7 +1,7 @@
 from datetime import date, datetime, time, timedelta
 from decimal import Decimal
 from enum import Enum, IntEnum, IntFlag
-from pathlib import Path
+from pathlib import PurePosixPath
 
 from django.db.models import IntegerChoices, TextChoices
 from django.db.models.enums import Choices
@@ -340,9 +340,9 @@ class MultiWithNone(Enum):
 
 
 class PathEnum(Enum):
-    USR = Path("/usr")
-    USR_LOCAL = Path("/usr/local")
-    USR_LOCAL_BIN = Path("/usr/local/bin")
+    USR = PurePosixPath("/usr")
+    USR_LOCAL = PurePosixPath("/usr/local")
+    USR_LOCAL_BIN = PurePosixPath("/usr/local/bin")
 
 
 class StrProps:
