@@ -826,6 +826,7 @@ dev = [
     { name = "sphinx-tabs" },
     { name = "sphinxcontrib-django" },
     { name = "tomlkit" },
+    { name = "types-django-filter" },
     { name = "types-pyyaml" },
 ]
 docs = [
@@ -880,6 +881,7 @@ typing = [
     { name = "djangorestframework-stubs" },
     { name = "mypy" },
     { name = "pyright" },
+    { name = "types-django-filter" },
     { name = "types-pyyaml" },
 ]
 
@@ -932,6 +934,7 @@ dev = [
     { name = "sphinx-tabs", specifier = ">=3.4.7" },
     { name = "sphinxcontrib-django", specifier = ">=2.5" },
     { name = "tomlkit", specifier = ">=0.13.3" },
+    { name = "types-django-filter", specifier = ">=25.2.0.20251228" },
     { name = "types-pyyaml", specifier = ">=6.0.12.20241230" },
 ]
 docs = [
@@ -973,6 +976,7 @@ typing = [
     { name = "djangorestframework-stubs", specifier = ">=3.16.1" },
     { name = "mypy", specifier = ">=1.19.1" },
     { name = "pyright", specifier = ">=1.1.390" },
+    { name = "types-django-filter", specifier = ">=25.2.0.20251228" },
     { name = "types-pyyaml", specifier = ">=6.0.12.20241230" },
 ]
 
@@ -2427,15 +2431,16 @@ wheels = [
 
 [[package]]
 name = "pytest-env"
-version = "1.2.0"
+version = "1.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pytest" },
+    { name = "python-dotenv" },
     { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/13/12/9c87d0ca45d5992473208bcef2828169fa7d39b8d7fc6e3401f5c08b8bf7/pytest_env-1.2.0.tar.gz", hash = "sha256:475e2ebe8626cee01f491f304a74b12137742397d6c784ea4bc258f069232b80", size = 8973, upload-time = "2025-10-09T19:15:47.42Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/25/74/d03592dcf502ba32d1199c7e1bb9330c2bb92510e6d65957bef9af15b57c/pytest_env-1.3.0.tar.gz", hash = "sha256:967a28495dd0fb60b8bfe684c57c7f2804a5ba11764d89ba9c310ab97b1fdf94", size = 11819, upload-time = "2026-02-11T17:37:07.253Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/27/98/822b924a4a3eb58aacba84444c7439fce32680592f394de26af9c76e2569/pytest_env-1.2.0-py3-none-any.whl", hash = "sha256:d7e5b7198f9b83c795377c09feefa45d56083834e60d04767efd64819fc9da00", size = 6251, upload-time = "2025-10-09T19:15:46.077Z" },
+    { url = "https://files.pythonhosted.org/packages/8d/fc/2dfd4cf9b82fd768c8fe52bff4cb732aac707a7708cf862ef416203fd421/pytest_env-1.3.0-py3-none-any.whl", hash = "sha256:ffe08c3a709775e59afd252100f521ecb53090e459b1e83e9e1be039010e2edb", size = 7860, upload-time = "2026-02-11T17:37:05.804Z" },
 ]
 
 [[package]]
@@ -2463,6 +2468,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/66/c0/0c8b6ad9f17a802ee498c46e004a0eb49bc148f2fd230864601a86dcf6db/python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3", size = 342432, upload-time = "2024-03-01T18:36:20.211Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427", size = 229892, upload-time = "2024-03-01T18:36:18.57Z" },
+]
+
+[[package]]
+name = "python-dotenv"
+version = "1.2.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/f0/26/19cadc79a718c5edbec86fd4919a6b6d3f681039a2f6d66d14be94e75fb9/python_dotenv-1.2.1.tar.gz", hash = "sha256:42667e897e16ab0d66954af0e60a9caa94f0fd4ecf3aaf6d2d260eec1aa36ad6", size = 44221, upload-time = "2025-10-26T15:12:10.434Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/14/1b/a298b06749107c305e1fe0f814c6c74aea7b2f1e10989cb30f544a1b3253/python_dotenv-1.2.1-py3-none-any.whl", hash = "sha256:b81ee9561e9ca4004139c6cbba3a238c32b03e4894671e181b671e8cb8425d61", size = 21230, upload-time = "2025-10-26T15:12:09.109Z" },
 ]
 
 [[package]]
@@ -3022,6 +3036,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/eb/79/72064e6a701c2183016abbbfedaba506d81e30e232a68c9f0d6f6fcd1574/traitlets-5.14.3.tar.gz", hash = "sha256:9ed0579d3502c94b4b3732ac120375cda96f923114522847de4b3bb98b96b6b7", size = 161621, upload-time = "2024-04-19T11:11:49.746Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/00/c0/8f5d070730d7836adc9c9b6408dec68c6ced86b304a9b26a14df072a6e8c/traitlets-5.14.3-py3-none-any.whl", hash = "sha256:b74e89e397b1ed28cc831db7aea759ba6640cb3de13090ca145426688ff1ac4f", size = 85359, upload-time = "2024-04-19T11:11:46.763Z" },
+]
+
+[[package]]
+name = "types-django-filter"
+version = "25.2.0.20251228"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django-stubs" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/9f/2d/84cde9ab981c2999552ae8b55ee6e29650383550fc1999d07e3a2136c90e/types_django_filter-25.2.0.20251228.tar.gz", hash = "sha256:ff78833fe39dd7ef4b1a3f5fcbe9b8f1d40019f022ddbb29b7ddc8aa2453d0fa", size = 15691, upload-time = "2025-12-28T03:28:24.406Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/77/4b/65239738925362893bad44bdab3664758559a336709bfdbbdcb598c0e580/types_django_filter-25.2.0.20251228-py3-none-any.whl", hash = "sha256:4f9fab2c0f47dd2750b1338aba20cc830d9323f8d9bcd4354251c7b7dbb21b6f", size = 19341, upload-time = "2025-12-28T03:28:23.108Z" },
 ]
 
 [[package]]

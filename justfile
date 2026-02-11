@@ -72,7 +72,7 @@ check-types-mypy *RUN_ARGS:
 
 # run static type checking with pyright
 check-types-pyright *RUN_ARGS:
-    #@just run --no-default-groups --all-extras --group typing {{ RUN_ARGS }} pyright
+    @just run --no-default-groups --all-extras --group typing {{ RUN_ARGS }} pyright
 
 # run all static type checking
 check-types: check-types-mypy check-types-pyright

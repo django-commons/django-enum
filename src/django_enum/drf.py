@@ -8,7 +8,7 @@ from decimal import Decimal, DecimalException
 from enum import Enum, Flag
 from functools import reduce
 from operator import or_
-from typing import Any, Dict, Optional, Type, Union
+from typing import Any
 
 from rest_framework.fields import (
     CharField,
@@ -36,10 +36,10 @@ from django_enum.utils import (
 )
 
 
-class ClassLookupDict:
+class ClassLookupdict:
     """
     A dict-like object that looks up values using the MRO of a class or
-    instance. Similar to DRF's ClassLookupDict but returns None instead
+    instance. Similar to DRF's ClassLookupdict but returns None instead
     of raising KeyError and allows classes or object instances to be
     used as lookup keys.
 
@@ -47,10 +47,10 @@ class ClassLookupDict:
         values.
     """
 
-    def __init__(self, mapping: Dict[Type[Any], Any]):
+    def __init__(self, mapping: dict[type[Any], Any]):
         self.mapping = mapping
 
-    def __getitem__(self, key: Any) -> Optional[Any]:
+    def __getitem__(self, key: Any) -> Any | None:
         """
         Fetch the given object for the type or type of the given object.
 
@@ -87,12 +87,12 @@ class EnumField(ChoiceField):
         will be passed up to the base classes.
     """
 
-    enum: Type[Enum]
-    primitive: Type[Any]
+    enum: type[Enum]
+    primitive: type[Any]
     strict: bool = True
-    primitive_field: Optional[Field] = None
+    primitive_field: Field | None = None
 
-    def __init__(self, enum: Type[Enum], strict: bool = strict, **kwargs):
+    def __init__(self, enum: type[Enum], strict: bool = strict, **kwargs):
         self.enum = enum
         self.primitive = determine_primitive(enum)  # type: ignore
         assert self.primitive is not None, (
@@ -106,7 +106,7 @@ class EnumField(ChoiceField):
             # if this field is not strict, we instantiate its primitive
             # field type so we can fall back to its to_internal_value
             # method if the value is not a valid enum value
-            primitive_field_cls = ClassLookupDict(
+            primitive_field_cls = ClassLookupdict(
                 {
                     str: CharField,
                     int: IntegerField,
@@ -145,7 +145,7 @@ class EnumField(ChoiceField):
                 self.primitive_field = primitive_field_cls(**field_kwargs)
         super().__init__(choices=self.choices, **kwargs)
 
-    def to_internal_value(self, data: Any) -> Union[Enum, Any]:  # type: ignore[override]
+    def to_internal_value(self, data: Any) -> Enum | Any:  # type: ignore[override]
         """
         Transform the *incoming* primitive data into an enum instance.
 
@@ -196,10 +196,10 @@ class FlagField(MultipleChoiceField):
         will be passed up to the base classes.
     """
 
-    enum: Type[Flag]
+    enum: type[Flag]
     strict: bool = True
 
-    def __init__(self, enum: Type[Flag], strict: bool = strict, **kwargs):
+    def __init__(self, enum: type[Flag], strict: bool = strict, **kwargs):
         self.enum = enum
         self.strict = strict
         self.choices = kwargs.pop("choices", choices(enum))
@@ -207,7 +207,7 @@ class FlagField(MultipleChoiceField):
         kwargs.pop("model_field", None)
         super().__init__(choices=self.choices, **kwargs)
 
-    def to_internal_value(self, data: Any) -> Union[Enum, Any]:  # type: ignore[override]
+    def to_internal_value(self, data: Any) -> Enum | Any:  # type: ignore[override]
         """
         Transform the *incoming* primitive data into an enum instance.
         We accept a composite flag value or a list of values. If a list,
@@ -256,7 +256,9 @@ class EnumFieldMixin(with_typehint(ModelSerializer)):  # type: ignore
     EnumFields.
     """
 
-    def build_standard_field(self, field_name, model_field):
+    def build_standard_field(
+        self, field_name: str, model_field: EnumModelField
+    ) -> tuple[type[Field], dict[str, Any]]:
         """
         The default implementation of build_standard_field will set any
         field with choices to a ChoiceField. This will override that for
@@ -282,7 +284,7 @@ class EnumFieldMixin(with_typehint(ModelSerializer)):  # type: ignore
         :return: A 2-tuple, the first element is the field class, the
             second is the kwargs for the field
         """
-        field_class = ClassLookupDict(
+        field_class = ClassLookupdict(
             {FlagModelField: FlagField, EnumModelField: EnumField}
         )[model_field]
         if field_class:
