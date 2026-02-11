@@ -49,7 +49,6 @@ jobs:
         psycopg-version: ['psycopg2', 'psycopg3']
         django-version:
           - '4.2' # LTS April 2026
-          - '5.1' # December 2025
           - '5.2' # LTS April 2028
           - '6.0' # April 2027
         exclude:
@@ -63,17 +62,12 @@ jobs:
             psycopg-version: 'psycopg3'
           
           - postgres-version: '12'
-            django-version: '5.1'
-
-          - postgres-version: '12'
             django-version: '5.2'
           
           # https://github.com/psycopg/psycopg2/pull/1695
           - python-version: '3.13'
             psycopg-version: 'psycopg2'
           
-          - python-version: '3.14'
-            django-version: '5.1'
           # https://github.com/psycopg/psycopg2/pull/1695
           - python-version: '3.14'
             psycopg-version: 'psycopg2'
@@ -520,8 +514,8 @@ jobs:
         python-version: ['3.10', '3.12', '3.14']
         django-version:
           - '4.2' # LTS April 2026
-          - '5.2' # LTS April 2028
-          - '6.0' # April 2027
+          - '5.2.10' # LTS April 2028
+          - '6.0.1' # April 2027
         oracle-version:
           - 'oracle-xe:21'
           - 'oracle-free:latest'
@@ -532,20 +526,20 @@ jobs:
             django-version: '4.2'
 
           - python-version: '3.10'
-            django-version: '5.2'
+            django-version: '5.2.10'
           - python-version: '3.14'
-            django-version: '5.2'
+            django-version: '5.2.10'
 
           - python-version: '3.10'
-            django-version: '6.0'
+            django-version: '6.0.1'
           - python-version: '3.12'
-            django-version: '6.0'
+            django-version: '6.0.1'
 
           - django-version: '4.2'
             oracle-version: 'oracle-free:latest'
-          - django-version: '5.2'
+          - django-version: '5.2.10'
             oracle-version: 'oracle-xe:21'
-          - django-version: '6.0'
+          - django-version: '6.0.1'
             oracle-version: 'oracle-xe:21'
 
     services:

@@ -89,7 +89,7 @@ class TextChoices(
         return DjangoTextChoices.__hash__(self)
 
 
-class IntegerChoices(
+class IntegerChoices(  # type: ignore[metaclass]
     DjangoSymmetricMixin, DjangoIntegerChoices, metaclass=DjangoEnumPropertiesMeta
 ):
     """
@@ -101,7 +101,7 @@ class IntegerChoices(
         return DjangoIntegerChoices.__hash__(self)
 
 
-class FloatChoices(
+class FloatChoices(  # type: ignore[metaclass]
     DjangoSymmetricMixin, float, Choices, metaclass=DjangoEnumPropertiesMeta
 ):
     """
