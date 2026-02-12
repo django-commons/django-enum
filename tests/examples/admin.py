@@ -1,4 +1,3 @@
-import sys
 from django.contrib import admin
 from django.forms import ModelForm, Select, RadioSelect
 from django_enum.forms import (
@@ -7,8 +6,7 @@ from django_enum.forms import (
     FlagCheckbox,
     NonStrictFlagCheckbox,
     NonStrictFlagSelectMultiple,
-    NonStrictSelect,
-    NonStrictSelectMultiple
+    NonStrictSelect
 )
 from tests.examples.models import (
     Map,

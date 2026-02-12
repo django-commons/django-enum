@@ -8,6 +8,7 @@ from django.forms import ModelForm
 from django.db.models import Model
 from django.contrib import admin
 from pathlib import Path
+import tests
 from tests.test_admin import _GenericAdminFormTest
 from tests.utils import DJANGO_FILTERS, DJANGO_REST_FRAMEWORK
 from tests.examples.models import (
@@ -352,7 +353,7 @@ class ExampleTests(TestCase):  # pragma: no cover  - why is this necessary?
             self.assertTrue("Red" in list_items)
             self.assertFalse("Green" in list_items)
             self.assertFalse("Blue" in list_items)
-            page.pause()
+
             self.assertEqual(
                 page.locator("select#id_color option:checked").text_content(),
                 "Red",
@@ -436,7 +437,7 @@ class ExampleTests(TestCase):  # pragma: no cover  - why is this necessary?
             page = browser.new_page()
 
             page.set_content(initial_content)
-            page.pause()
+
             self.assertEqual(
                 page.locator("select#id_color option:checked").text_content(),
                 "Red",
@@ -502,7 +503,7 @@ class ExampleTests(TestCase):  # pragma: no cover  - why is this necessary?
             browser = p.chromium.launch(headless=True)
             page = browser.new_page()
             page.set_content(initial_content)
-            page.pause()
+
             self.assertEqual(
                 page.locator("input[type='radio'][name='color']:checked").get_attribute(
                     "value"
@@ -564,7 +565,6 @@ class ExampleTests(TestCase):  # pragma: no cover  - why is this necessary?
             initial_content = self.client.get(url).content.decode()
 
             page.set_content(initial_content)
-            page.pause()
 
             response = self.client.post(
                 url,
@@ -607,7 +607,7 @@ class ExampleTests(TestCase):  # pragma: no cover  - why is this necessary?
             )
 
             page.set_content(initial_content)
-            page.pause()
+
             self.assertEqual(
                 page.locator("select[name=permissions] option:checked").evaluate_all(
                     "elements => elements.map(element => element.value)"
@@ -689,7 +689,6 @@ class ExampleTests(TestCase):  # pragma: no cover  - why is this necessary?
             initial_content = self.client.get(url).content.decode()
 
             page.set_content(initial_content)
-            page.pause()
 
             response = self.client.post(
                 url,
@@ -732,7 +731,7 @@ class ExampleTests(TestCase):  # pragma: no cover  - why is this necessary?
             )
 
             page.set_content(initial_content)
-            page.pause()
+
             self.assertEqual(
                 page.locator(
                     "input[type='checkbox'][name='permissions']:checked"
@@ -809,6 +808,8 @@ class _WidgetDemoTest(_GenericAdminFormTest):
 
     WIDTH_ADJUST = -600
 
+    pytestmark = pytest.mark.screenshots
+
     def image_name(self, field: str):
         admin_instance = admin.site._registry.get(self.MODEL_CLASS)
         form_class = admin_instance.get_form(None)
@@ -820,6 +821,8 @@ class _WidgetDemoTest(_GenericAdminFormTest):
         """
         Use playwright to take a screenshot of the admin change form for the object.
         """
+        if not self.record_screenshots:
+            return
         url = self.change_url(obj.pk)
         self.page.goto(url)
         # Take a picture of the form for the permissions
@@ -850,7 +853,7 @@ class _WidgetDemoTest(_GenericAdminFormTest):
 class WidgetDemoStrictTest(_WidgetDemoTest):
     MODEL_CLASS = WidgetDemoStrict
 
-    HEADLESS = True
+    HEADLESS = tests.HEADLESS
 
     __test__ = True
 
@@ -870,7 +873,7 @@ class WidgetDemoStrictTest(_WidgetDemoTest):
 class WidgetDemoNonStrictTest(_WidgetDemoTest):
     MODEL_CLASS = WidgetDemoNonStrict
 
-    HEADLESS = True
+    HEADLESS = tests.HEADLESS
 
     __test__ = True
 
@@ -899,7 +902,7 @@ class WidgetDemoNonStrictTest(_WidgetDemoTest):
 class WidgetDemoRadiosAndChecksTest(WidgetDemoStrictTest):
     MODEL_CLASS = WidgetDemoRadiosAndChecks
 
-    HEADLESS = True
+    HEADLESS = tests.HEADLESS
 
     use_radio = True
     use_checkbox = True
@@ -908,7 +911,7 @@ class WidgetDemoRadiosAndChecksTest(WidgetDemoStrictTest):
 class WidgetDemoRadiosAndChecksNullsTest(_WidgetDemoTest):
     MODEL_CLASS = WidgetDemoRadiosAndChecksNulls
 
-    HEADLESS = True
+    HEADLESS = tests.HEADLESS
 
     __test__ = True
 

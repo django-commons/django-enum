@@ -2,6 +2,8 @@
 Support for :doc:`django-filter <django-filter:index>`.
 """
 
+from __future__ import annotations
+
 import typing as t
 from enum import Enum, Flag
 
@@ -57,11 +59,11 @@ class EnumFilter(TypedChoiceFilter):
         (:class:`~django_filters.filters.TypedChoiceFilter`)
     """
 
-    enum: t.Type[Enum]
+    enum: type[Enum]
     strict: bool
     field_class = EnumChoiceField
 
-    def __init__(self, *, enum: t.Type[Enum], strict: bool = True, **kwargs):
+    def __init__(self, *, enum: type[Enum], strict: bool = True, **kwargs):
         self.enum = enum
         self.strict = strict
         super().__init__(
@@ -87,14 +89,14 @@ class MultipleEnumFilter(TypedMultipleChoiceFilter):
         (:class:`~django_filters.filters.TypedMultipleChoiceFilter`)
     """
 
-    enum: t.Type[Enum]
+    enum: type[Enum]
     strict: bool
     field_class = EnumMultipleChoiceField
 
     def __init__(
         self,
         *,
-        enum: t.Type[Enum],
+        enum: type[Enum],
         strict: bool = True,
         conjoined: bool = False,
         **kwargs,
@@ -130,13 +132,15 @@ class EnumFlagFilter(TypedMultipleChoiceFilter):
         (:class:`~django_filters.filters.TypedMultipleChoiceFilter`)
     """
 
-    enum: t.Type[Flag]
+    enum: type[Flag]
     field_class = EnumFlagField
+
+    parent: FilterSet | None = None
 
     def __init__(
         self,
         *,
-        enum: t.Type[Flag],
+        enum: type[Flag],
         strict: bool = True,
         conjoined: bool = False,
         **kwargs,
@@ -166,7 +170,7 @@ class EnumFlagFilter(TypedMultipleChoiceFilter):
                 return self.get_method(qs)(Q(**{f"{self.field_name}": 0}))
             return qs
 
-        qs = self.get_method(qs)(Q(**self.get_filter_predicate(value)))
+        qs = self.get_method(qs)(Q(**self.get_filter_predicate(value)))  # type: ignore
         return qs.distinct() if self.distinct else qs
 
 
@@ -184,7 +188,7 @@ class FilterSet(filterset.FilterSet):
     """
 
     @staticmethod
-    def enum_extra(f: EnumField) -> t.Dict[str, t.Any]:
+    def enum_extra(f: EnumField) -> dict[str, t.Any]:
         return {"enum": f.enum, "strict": f.strict, "choices": f.choices}
 
     FILTER_DEFAULTS = {
@@ -204,7 +208,7 @@ class FilterSet(filterset.FilterSet):
     @classmethod
     def filter_for_lookup(
         cls, field: ModelField, lookup_type: str
-    ) -> t.Tuple[t.Optional[t.Type[Filter]], t.Dict[str, t.Any]]:
+    ) -> tuple[type[Filter], dict[str, t.Any]]:
         """For EnumFields use the EnumFilter class by default"""
         # we can't just pass this up to the base implementation because if it sees
         # choices on a field it will hard set to ChoiceField

@@ -4,7 +4,6 @@ Enum class.
 """
 
 from enum import Enum
-from typing import Dict, Type
 
 from django.urls.converters import register_converter
 
@@ -14,11 +13,13 @@ __all__ = ["register_enum_converter"]
 
 
 class _EnumConverter:
-    enum: Type[Enum]
+    enum: type[Enum]
     prop: str = "value"
     primitive: type
 
-    _lookup_: Dict[str, Enum]
+    regex: str = ".+"
+
+    _lookup_: dict[str, Enum]
 
     def to_python(self, value: str) -> Enum:
         """
@@ -26,7 +27,7 @@ class _EnumConverter:
         """
         return self._lookup_[value]
 
-    def to_url(self, value):
+    def to_url(self, value: Enum) -> str:
         """
         Convert the given enumeration value to its url string.
 
@@ -36,7 +37,7 @@ class _EnumConverter:
         return str(getattr(value, self.prop))
 
 
-def register_enum_converter(enum: Type[Enum], type_name="", prop="value"):
+def register_enum_converter(enum: type[Enum], type_name="", prop="value"):
     """
     Register an enum converter for Django's URL dispatcher.
 

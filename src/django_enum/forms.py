@@ -49,19 +49,19 @@ __all__ = [
 
 
 _SelectChoices = t.Iterable[
-    t.Union[t.Tuple[t.Any, t.Any], t.Tuple[str, t.Iterable[t.Tuple[t.Any, t.Any]]]]
+    tuple[t.Any, t.Any] | tuple[str, t.Iterable[tuple[t.Any, t.Any]]]
 ]
 
-_Choice = t.Tuple[t.Any, t.Any]
-_ChoiceNamedGroup = t.Tuple[str, t.Iterable[_Choice]]
-_FieldChoices = t.Iterable[t.Union[_Choice, _ChoiceNamedGroup]]
+_Choice = tuple[t.Any, t.Any]
+_ChoiceNamedGroup = tuple[str, t.Iterable[_Choice]]
+_FieldChoices = t.Iterable[_Choice | _ChoiceNamedGroup]
 
 
 class _ChoicesCallable(t.Protocol):
     def __call__(self) -> _FieldChoices: ...  # pragma: no cover
 
 
-_ChoicesParameter = t.Union[_FieldChoices, _ChoicesCallable]
+_ChoicesParameter = _FieldChoices | _ChoicesCallable
 
 
 class _CoerceCallable(t.Protocol):
@@ -170,9 +170,9 @@ class FlagMixin:
     This mixin adapts a widget to work with :class:`~enum.IntFlag` types.
     """
 
-    enum: t.Optional[t.Type[Flag]]
+    enum: type[Flag] | None
 
-    def __init__(self, enum: t.Optional[t.Type[Flag]] = None, **kwargs):
+    def __init__(self, enum: type[Flag] | None = None, **kwargs):
         self.enum = enum
         super().__init__(**kwargs)
 
@@ -316,8 +316,8 @@ class ChoiceFieldMixin(
     :param kwargs: Any additional parameters to pass to ChoiceField base class.
     """
 
-    _enum_: t.Optional[t.Type[Enum]] = None
-    _primitive_: t.Optional[t.Type] = None
+    _enum_: type[Enum] | None = None
+    _primitive_: type | None = None
     _strict_: bool = True
     empty_value: t.Any = ""
     empty_values: t.Sequence[t.Any] = list(TypedChoiceField.empty_values)
@@ -327,18 +327,18 @@ class ChoiceFieldMixin(
 
     choices: _ChoicesParameter
 
-    non_strict_widget: t.Optional[t.Type[ChoiceWidget]] = NonStrictSelect
+    non_strict_widget: type[ChoiceWidget] | None = NonStrictSelect
 
     def __init__(
         self,
-        enum: t.Optional[t.Type[Enum]] = _enum_,
-        primitive: t.Optional[t.Type] = _primitive_,
+        enum: type[Enum] | None = _enum_,
+        primitive: type | None = _primitive_,
         *,
         empty_value: t.Any = _Unspecified,
         strict: bool = _strict_,
-        empty_values: t.Union[t.List[t.Any], t.Type[_Unspecified]] = _Unspecified,
+        empty_values: list[t.Any] | type[_Unspecified] = _Unspecified,
         choices: _ChoicesParameter = (),
-        coerce: t.Optional[_CoerceCallable] = None,
+        coerce: _CoerceCallable | None = None,
         **kwargs,
     ):
         self._strict_ = strict
@@ -423,23 +423,23 @@ class ChoiceFieldMixin(
 
     def _coerce_to_value_type(self, value: t.Any) -> t.Any:
         """Coerce the value to the enumerations value type"""
-        return self.primitive(value)
+        return self.primitive(value) if self.primitive else value
 
     def prepare_value(self, value: t.Any) -> t.Any:
         """Must return the raw enumeration value type"""
-        value = self._coerce(value)
+        value = self._coerce(value)  # type: ignore
         return super().prepare_value(
-            value.value if isinstance(value, self.enum) else value
+            value.value if self.enum and isinstance(value, self.enum) else value
         )
 
     def to_python(self, value: t.Any) -> t.Any:
         """Return the value as its full enumeration object"""
-        return self._coerce(value)
+        return self._coerce(value)  # type: ignore
 
     def valid_value(self, value: t.Any) -> bool:
         """Return false if this value is not valid"""
         try:
-            self._coerce(value)
+            self._coerce(value)  # type: ignore
             return True
         except ValidationError:
             return False
@@ -550,11 +550,11 @@ class EnumFlagField(ChoiceFieldMixin, TypedMultipleChoiceField):  # type: ignore
 
     def __init__(
         self,
-        enum: t.Optional[t.Type[Flag]] = None,
+        enum: type[Flag] | None = None,
         *,
         empty_value: t.Any = _Unspecified,
         strict: bool = ChoiceFieldMixin._strict_,
-        empty_values: t.Union[t.List[t.Any], t.Type[_Unspecified]] = _Unspecified,
+        empty_values: list[t.Any] | type[_Unspecified] = _Unspecified,
         choices: _ChoicesParameter = (),
         **kwargs,
     ):

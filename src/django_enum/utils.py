@@ -8,14 +8,8 @@ from importlib.util import find_spec
 from typing import (
     TYPE_CHECKING,
     Any,
-    Dict,
     Generator,
-    List,
-    Optional,
-    Tuple,
-    Type,
     TypeVar,
-    Union,
     get_args,
 )
 
@@ -44,20 +38,10 @@ T = TypeVar("T")
 E = TypeVar("E", bound=Enum)
 F = TypeVar("F", bound=Flag)
 
-SupportedPrimitive = Union[
-    int,
-    str,
-    float,
-    # bytes,
-    date,
-    datetime,
-    time,
-    timedelta,
-    Decimal,
-]
+SupportedPrimitive = int | str | float | date | datetime | time | timedelta | Decimal
 
 
-def with_typehint(baseclass: Type[T]) -> Type[T]:
+def with_typehint(baseclass: type[T]) -> type[T]:
     """
     Change inheritance to add Field type hints when type checking is running.
     This is just more simple than defining a Protocol - revisit if Django
@@ -72,8 +56,8 @@ def with_typehint(baseclass: Type[T]) -> Type[T]:
 
 
 def choices(
-    enum_cls: Optional[Type[Enum]], override: bool = False, aliases: bool = True
-) -> List[Tuple[Any, str]]:
+    enum_cls: type[Enum] | None, override: bool = False, aliases: bool = True
+) -> list[tuple[Any, str]]:
     """
     Get the Django choices for an enumeration type. If the enum type has a
     choices attribute, it will be used. Otherwise, the choices will be derived
@@ -93,7 +77,7 @@ def choices(
         or (
             [
                 *(
-                    [(None, enum_cls.__empty__)]
+                    [(None, getattr(enum_cls, "__empty__"))]
                     if hasattr(enum_cls, "__empty__")
                     else []
                 ),
@@ -109,8 +93,8 @@ def choices(
 
 
 def names(
-    enum_cls: Optional[Type[Enum]], override: bool = False, aliases: bool = True
-) -> List[Any]:
+    enum_cls: type[Enum] | None, override: bool = False, aliases: bool = True
+) -> list[Any]:
     """
     Return a list of names to use for the enumeration type. This is used
     for compat with enums that do not inherit from Django's Choices type.
@@ -133,7 +117,7 @@ def names(
     )
 
 
-def labels(enum_cls: Optional[Type[Enum]]) -> List[Any]:
+def labels(enum_cls: type[Enum] | None) -> list[Any]:
     """
     Return a list of labels to use for the enumeration type. See choices.
 
@@ -146,7 +130,7 @@ def labels(enum_cls: Optional[Type[Enum]]) -> List[Any]:
     return getattr(enum_cls, "labels", [label for _, label in choices(enum_cls)])
 
 
-def values(enum_cls: Optional[Type[Enum]]) -> List[Any]:
+def values(enum_cls: type[Enum] | None) -> list[Any]:
     """
     Return a list of the values of an enumeration type.
 
@@ -159,7 +143,7 @@ def values(enum_cls: Optional[Type[Enum]]) -> List[Any]:
     return getattr(enum_cls, "values", [value for value, _ in choices(enum_cls)])
 
 
-def determine_primitive(enum: Type[Enum]) -> Optional[Type]:
+def determine_primitive(enum: type[Enum]) -> type | None:
     """
     Determine the python type most appropriate to represent all values of the
     enumeration class. The primitive type determination algorithm is thus:
@@ -219,10 +203,10 @@ def is_power_of_two(n: int) -> bool:
 
 
 def decimal_params(
-    enum: Optional[Type[Enum]],
-    decimal_places: Optional[int] = None,
-    max_digits: Optional[int] = None,
-) -> Dict[str, int]:
+    enum: type[Enum] | None,
+    decimal_places: int | None = None,
+    max_digits: int | None = None,
+) -> dict[str, int]:
     """
     Determine the maximum number of digits and decimal places required to
     represent all values of the enumeration class.
@@ -247,7 +231,7 @@ def decimal_params(
     return {"max_digits": max_digits, "decimal_places": decimal_places}
 
 
-def get_set_bits(flag: Optional[Union[int, IntFlag]]) -> List[int]:
+def get_set_bits(flag: int | IntFlag | None) -> list[int]:
     """
     Return the indices of the bits set in the flag.
 
@@ -259,7 +243,7 @@ def get_set_bits(flag: Optional[Union[int, IntFlag]]) -> List[int]:
     return []
 
 
-def get_set_values(flag: Optional[Union[int, IntFlag]]) -> List[int]:
+def get_set_values(flag: int | IntFlag | None) -> list[int]:
     """
     Return the integers corresponding to the flags set on the IntFlag or integer.
 
@@ -271,7 +255,7 @@ def get_set_values(flag: Optional[Union[int, IntFlag]]) -> List[int]:
     return []
 
 
-def decompose(flags: Optional[F]) -> List[F]:
+def decompose(flags: F | None) -> list[F]:
     """
     Get the activated flags in a :class:`~enum.Flag` instance. For example:
 
@@ -300,7 +284,7 @@ def decompose(flags: Optional[F]) -> List[F]:
     ]
 
 
-def members(enum: Type[E], aliases: bool = True) -> Generator[E, None, None]:
+def members(enum: type[E], aliases: bool = True) -> Generator[E, None, None]:
     """
     Get the members of an enumeration class. This can be tricky to do
     in a python version agnostic way, so it is recommended to

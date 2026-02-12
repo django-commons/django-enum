@@ -12,7 +12,12 @@ from django.db.models import Choices
 from django.db.models import IntegerChoices as DjangoIntegerChoices
 from django.db.models import TextChoices as DjangoTextChoices
 from django.db.models import enums as model_enums
-from enum_properties import DecomposeMixin, EnumPropertiesMeta, SymmetricMixin
+from enum_properties import (
+    DecomposeMixin,
+    EnumProperties,
+    EnumPropertiesMeta,
+    SymmetricMixin,
+)
 
 from django_enum.utils import choices, names
 
@@ -48,24 +53,24 @@ class DjangoEnumPropertiesMeta(EnumPropertiesMeta, ChoicesType):  # type: ignore
         return cls
 
     @property
-    def names(self) -> t.List[str]:
+    def names(self: type[EnumProperties]) -> list[str]:
         """
         For some eccentric enums list(Enum) is empty, so we override names
         if empty.
 
         :returns: list of enum value names
         """
-        return super().names or names(self, override=True)
+        return super().names or names(self, override=True)  # type: ignore[misc]
 
     @property
-    def choices(self) -> t.List[t.Tuple[t.Any, str]]:
+    def choices(self: type[EnumProperties]) -> list[tuple[t.Any, str]]:
         """
         For some eccentric enums list(Enum) is empty, so we override
         choices if empty
 
         :returns: list of enum value choices
         """
-        return super().choices or choices(self, override=True)
+        return super().choices or choices(self, override=True)  # type: ignore[misc]
 
 
 class DjangoSymmetricMixin(SymmetricMixin):
@@ -116,7 +121,7 @@ class FloatChoices(  # type: ignore[metaclass]
         return str(self.value)
 
 
-# mult inheritance type hint bug
+# multiple inheritance type hint bug
 class FlagChoices(  # type: ignore
     DecomposeMixin,
     DjangoSymmetricMixin,

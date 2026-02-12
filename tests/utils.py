@@ -6,8 +6,6 @@ from pathlib import Path
 from importlib.util import find_spec
 
 from tests.oracle_patch import patch_oracle
-from dateutil import parser
-from dateutil.parser import ParserError
 
 duration_rgx1 = re.compile(
     r"(-)?(\d+) (?:days?, )?(\d{1,2}):(\d{2}):(\d{2})(?:\.(\d+))?", re.IGNORECASE
@@ -22,6 +20,8 @@ DJANGO_REST_FRAMEWORK = bool(find_spec("rest_framework"))
 
 
 def try_convert(primitive, value, raise_on_error=True):
+    from dateutil.parser import ParserError
+
     try:
         return CONVERTERS[primitive](value)
     except (ValueError, TypeError, KeyError, ParserError, DecimalException) as err:
@@ -55,10 +55,28 @@ def str_to_decimal(value):
     raise ValueError("Invalid decimal value")
 
 
+def convert_date(value):
+    from dateutil import parser
+
+    return parser.parse(value).date()
+
+
+def convert_datetime(value):
+    from dateutil import parser
+
+    return parser.parse(value)
+
+
+def convert_time(value):
+    from dateutil import parser
+
+    return parser.parse(value).time()
+
+
 CONVERTERS = {
-    date: lambda value: parser.parse(value).date(),
-    datetime: lambda value: parser.parse(value),
-    time: lambda value: parser.parse(value).time(),
+    date: convert_date,
+    datetime: convert_datetime,
+    time: convert_time,
     timedelta: str_to_timedelta,
     Decimal: str_to_decimal,
 }

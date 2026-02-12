@@ -6,7 +6,7 @@ instance = PropertyExample.objects.create(
 )
 assert instance.color is PropertyExample.Color['RED']
 assert instance.color is PropertyExample.Color('R')
-assert instance.color is PropertyExample.Color((1, 0, 0))
+assert instance.color is PropertyExample.Color((1, 0, 0))  # type: ignore[arg-type]
 # note that we did not make label symmetric, so this does not work:
 # PropertyExample.Color('Red')
 

@@ -1,6 +1,8 @@
 # flake8: noqa
 from django.db import models
 from django_enum import EnumField
+from django_enum.fields import EnumCharField
+from django.db.models import Field
 
 
 class BasicExample(models.Model):
@@ -21,7 +23,7 @@ class BasicExample(models.Model):
 
     # this is equivalent to:
     #  CharField(max_length=2, choices=TextEnum.choices, null=True, blank=True)
-    txt_enum = EnumField(TextEnum, null=True, blank=True, default=None)
+    txt_enum: EnumCharField[TextEnum] = EnumCharField(TextEnum, str, null=True, blank=True, default=None)
 
     # this is equivalent to
     #  PositiveSmallIntegerField(choices=IntEnum.choices, default=IntEnum.ONE.value)

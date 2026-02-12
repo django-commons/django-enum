@@ -5,6 +5,7 @@ instance = BasicExample.objects.create(
     int_enum=3  # by-value assignment also works
 )
 
+reveal_type(instance.txt_enum)
 assert instance.txt_enum is BasicExample.TextEnum('V1')
 assert instance.txt_enum.label == 'Value 1'
 

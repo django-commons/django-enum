@@ -9,6 +9,7 @@ from django.test import LiveServerTestCase
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django_enum import EnumField
 from django_enum.utils import values
+import tests
 from tests.djenum.models import (
     AdminDisplayBug35,
     EnumTester,
@@ -86,12 +87,16 @@ class TestAdmin(EnumTypeMixin, LiveServerTestCase):
 class _GenericAdminFormTest(StaticLiveServerTestCase):
     MODEL_CLASS: t.Type[Model]
 
-    HEADLESS = True
+    HEADLESS = tests.HEADLESS
 
     __test__ = False
 
     use_radio = False
     use_checkbox = False
+
+    pytestmark = pytest.mark.ui
+
+    record_screenshots = False
 
     def enum(self, field: str) -> t.Type[Enum]:
         enum = t.cast(EnumField, self.MODEL_CLASS._meta.get_field(field)).enum
@@ -135,6 +140,7 @@ class _GenericAdminFormTest(StaticLiveServerTestCase):
         """Set up the test class with a live server and Playwright instance."""
         os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "1"
         super().setUpClass()
+        # cls.record_screenshots = pytest.Config.getoption("--record-screenshots")
         cls.playwright = sync_playwright().start()
         cls.browser = cls.playwright.chromium.launch(headless=cls.HEADLESS)
         cls.page = cls.browser.new_page()
@@ -406,7 +412,7 @@ class TestNullBlankAdminBehavior(_GenericAdminFormTest):
 class TestNullableBlankAdminBehavior(_GenericAdminFormTest):
     MODEL_CLASS = NullableBlankFormTester
     __test__ = True
-    HEADLESS = True
+    HEADLESS = tests.HEADLESS
 
     @property
     def changes(self) -> t.List[t.Dict[str, t.Any]]:
@@ -442,7 +448,7 @@ class TestNullableBlankAdminBehavior(_GenericAdminFormTest):
 class TestNullableStrAdminBehavior(_GenericAdminFormTest):
     MODEL_CLASS = NullableStrFormTester
     __test__ = True
-    HEADLESS = True
+    HEADLESS = tests.HEADLESS
 
     @property
     def changes(self) -> t.List[t.Dict[str, t.Any]]:
@@ -506,7 +512,7 @@ class TestBug53AdminBehavior(_GenericAdminFormTest):
 class TestAltWidgetAdminForm(_GenericAdminFormTest):
     MODEL_CLASS = AltWidgetTester
     __test__ = True
-    HEADLESS = True
+    HEADLESS = tests.HEADLESS
 
     use_radio = True
     use_checkbox = True

@@ -24,9 +24,9 @@ class TextChoicesExample(models.Model):
         # by default label is symmetric, but case sensitive
         # to make it case-insensitive we can override the property
         # and mark it like this:
-        @symmetric(case_fold=True)
+        @symmetric(case_fold=True)  # type: ignore[prop-decorator]
         @property
         def label(self) -> str:
-            return self._label_
+            return str(self._label_)
 
     color = EnumField(Color)
