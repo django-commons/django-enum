@@ -5,6 +5,13 @@ from pathlib import Path
 
 from django import VERSION as django_version
 
+try:
+    import django_stubs_ext
+
+    django_stubs_ext.monkeypatch()
+except ImportError:
+    pass
+
 DEBUG = not os.environ.get("IS_PYTEST_RUN", False)
 SECRET_KEY = "psst"
 SITE_ID = 1

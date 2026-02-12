@@ -7,14 +7,10 @@ EquivalencyExample.objects.create(txt_enum='V0', txt_choices='V0')
 # txt_enum fields will always be an instance of the TextEnum type, unless
 # set to a value that is not part of the enumeration
 
-assert isinstance(
-    EquivalencyExample.objects.first().txt_enum,
-    EquivalencyExample.TextEnum
-)
-assert isinstance(
-    EquivalencyExample.objects.first().txt_choices,
-    str
-)
+eq_ex = EquivalencyExample.objects.first()
+assert eq_ex
+assert isinstance(eq_ex.txt_enum, EquivalencyExample.TextEnum)
+assert isinstance(eq_ex.txt_choices, str)
 
 # by default EnumFields are more strict, this is possible:
 EquivalencyExample.objects.create(txt_choices='AA')

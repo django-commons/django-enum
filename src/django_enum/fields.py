@@ -119,14 +119,14 @@ class EnumValidatorAdapter:
             return self.wrapped.__getattribute__(name)
 
 
-class ToPythonDeferredAttribute(DeferredAttribute):
+class ToPythonDeferredAttribute(DeferredAttribute, Generic[PrimitiveT, EnumT]):
     """
     Extend DeferredAttribute descriptor to run a field's to_python method on a
     value anytime it is set on the model. This is used to ensure a EnumFields
     on models are always of their Enum type.
     """
 
-    def __set__(self, instance: Model, value: Any):
+    def __set__(self, instance: Model, value: PrimitiveT | EnumT | None):
         try:
             instance.__dict__[self.field.name] = (  # pyright: ignore[reportIndexIssue]
                 value
@@ -136,6 +136,9 @@ class ToPythonDeferredAttribute(DeferredAttribute):
         except (ValidationError, ValueError):
             # Django core fields allow assignment of any value, we do the same
             instance.__dict__[self.field.name] = value  # pyright: ignore[reportIndexIssue]
+
+    def __get__(self, instance, cls=None) -> EnumT | None:
+        return super().__get__(instance, cls=cls)
 
 
 class EnumFieldFactory(type):
@@ -802,7 +805,9 @@ class EnumField(_FieldBase, Generic[PrimitiveT, EnumT], metaclass=EnumFieldFacto
             )
 
 
-class EnumCharField(EnumField[str, EnumT], CharField):
+class EnumCharField(
+    EnumField[str, EnumT], CharField[str | EnumT, EnumT], Generic[EnumT]
+):
     """
     A database field supporting enumerations with character values.
     """
@@ -935,7 +940,9 @@ class IntEnumField(EnumField[int, EnumT], Generic[EnumT]):
         ]
 
 
-class EnumSmallIntegerField(IntEnumField[EnumT], SmallIntegerField, Generic[EnumT]):
+class EnumSmallIntegerField(
+    IntEnumField[EnumT], SmallIntegerField[int | EnumT, EnumT], Generic[EnumT]
+):
     """
     A database field supporting enumerations with integer values that fit into
     2 bytes or fewer
@@ -943,7 +950,7 @@ class EnumSmallIntegerField(IntEnumField[EnumT], SmallIntegerField, Generic[Enum
 
 
 class EnumPositiveSmallIntegerField(
-    IntEnumField[EnumT], PositiveSmallIntegerField, Generic[EnumT]
+    IntEnumField[EnumT], PositiveSmallIntegerField[int | EnumT, EnumT], Generic[EnumT]
 ):
     """
     A database field supporting enumerations with positive (but signed) integer
@@ -951,7 +958,9 @@ class EnumPositiveSmallIntegerField(
     """
 
 
-class EnumIntegerField(IntEnumField[EnumT], IntegerField, Generic[EnumT]):
+class EnumIntegerField(
+    IntEnumField[EnumT], IntegerField[int | EnumT, EnumT], Generic[EnumT]
+):
     """
     A database field supporting enumerations with integer values that fit into
     32 bytes or fewer
@@ -959,7 +968,7 @@ class EnumIntegerField(IntEnumField[EnumT], IntegerField, Generic[EnumT]):
 
 
 class EnumPositiveIntegerField(
-    IntEnumField[EnumT], PositiveIntegerField, Generic[EnumT]
+    IntEnumField[EnumT], PositiveIntegerField[int | EnumT, EnumT], Generic[EnumT]
 ):
     """
     A database field supporting enumerations with positive (but signed) integer
@@ -967,7 +976,9 @@ class EnumPositiveIntegerField(
     """
 
 
-class EnumBigIntegerField(IntEnumField[EnumT], BigIntegerField, Generic[EnumT]):
+class EnumBigIntegerField(
+    IntEnumField[EnumT], BigIntegerField[int | EnumT, EnumT], Generic[EnumT]
+):
     """
     A database field supporting enumerations with integer values that fit into
     64 bytes or fewer
@@ -975,7 +986,7 @@ class EnumBigIntegerField(IntEnumField[EnumT], BigIntegerField, Generic[EnumT]):
 
 
 class EnumPositiveBigIntegerField(
-    IntEnumField[EnumT], PositiveBigIntegerField, Generic[EnumT]
+    IntEnumField[EnumT], PositiveBigIntegerField[int | EnumT, EnumT], Generic[EnumT]
 ):
     """
     A database field supporting enumerations with positive (but signed) integer

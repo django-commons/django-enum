@@ -1,8 +1,14 @@
 from django.urls import path
 try:
     from django.shortcuts import render
-    from .choice_form_howto import TextChoicesExampleForm, TextChoicesExample
-    from .flag_form_howto import PermissionsExampleForm, Group
+    from .choice_form_howto import (
+        TextChoicesExampleForm as TextChoicesExampleForm,
+        TextChoicesExample as TextChoicesExample
+    )
+    from .flag_form_howto import (
+        PermissionsExampleForm as PermissionsExampleForm,
+        Group as Group
+    )
 
     def choice_form_view(request):
         from .choice_form_howto import TextChoicesExampleForm, form
