@@ -83,18 +83,37 @@ class NonStrictMixin:
 
     choices: _SelectChoices
 
-    def render(self, *args, **kwargs):
+    def render(self, name, value, attrs=None, renderer=None):
         """
         Before rendering if we're a non-strict field and our value is not
         one of our choices, we add it as an option.
         """
 
-        value: t.Any = getattr(kwargs.get("value"), "value", kwargs.get("value"))
-        if value not in EnumChoiceField.empty_values and value not in (
-            choice[0] for choice in self.choices
-        ):
-            self.choices = list(self.choices) + [(value, str(value))]
-        return super().render(*args, **kwargs)  # type: ignore[misc]
+        val: t.Any = getattr(value, "value", value)
+
+        def _has_value(choices_to_search):
+            if isinstance(choices_to_search, dict):
+                for k, v in choices_to_search.items():
+                    if isinstance(v, (dict, list, tuple)):
+                        if _has_value(v):
+                            return True
+                    elif k == val:
+                        return True
+                return False
+            for choice, label in choices_to_search:
+                if isinstance(label, (list, tuple)):
+                    if _has_value(label):
+                        return True
+                elif choice == val:
+                    return True
+            return False
+
+        if val not in EnumChoiceField.empty_values and not _has_value(self.choices):
+            if isinstance(self.choices, dict):
+                self.choices = list(self.choices.items()) + [(val, str(val))]
+            else:
+                self.choices = list(self.choices) + [(val, str(val))]
+        return super().render(name, value, attrs=attrs, renderer=renderer)  # type: ignore[misc]
 
 
 class NonStrictFlagMixin:
@@ -106,22 +125,38 @@ class NonStrictFlagMixin:
 
     choices: _SelectChoices
 
-    def render(self, *args, **kwargs):
+    def render(self, name, value, attrs=None, renderer=None):
         """
         Before rendering if we're a non-strict flag field and bits are set that are
         not part of our flag enumeration we add them as (integer value, bit index)
         to our (value, label) choice list.
         """
 
-        raw_choices = zip(
-            get_set_values(kwargs.get("value")), get_set_bits(kwargs.get("value"))
-        )
+        raw_choices = zip(get_set_values(value), get_set_bits(value))
         self.choices = list(self.choices)
-        choice_values = set(choice[0] for choice in self.choices)
-        for value, label in raw_choices:
-            if value not in choice_values:
-                self.choices.append((value, label))
-        return super().render(*args, **kwargs)  # type: ignore[misc]
+
+        def _get_values(choices_to_search):
+            if isinstance(choices_to_search, dict):
+                for k, v in choices_to_search.items():
+                    if isinstance(v, (dict, list, tuple)):
+                        yield from _get_values(v)
+                    else:
+                        yield k
+                return
+            for choice, label in choices_to_search:
+                if isinstance(label, (list, tuple)):
+                    yield from _get_values(label)
+                else:
+                    yield choice
+
+        choice_values = set(_get_values(self.choices))
+        for v, label in raw_choices:
+            if v not in choice_values:
+                if isinstance(self.choices, dict):
+                    self.choices = list(self.choices.items()) + [(v, label)]
+                else:
+                    self.choices.append((v, label))
+        return super().render(name, value, attrs=attrs, renderer=renderer)  # type: ignore[misc]
 
 
 class NonStrictSelect(NonStrictMixin, Select):

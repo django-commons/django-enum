@@ -464,6 +464,7 @@ class EnumField(
         self._strict_ = strict if enum else False
         self._coerce_ = coerce if enum else False
         self._constrained_ = constrained if constrained is not None else strict
+        self._choices_override_ = kwargs.get("choices")
         if self.enum is not None:
             kwargs.setdefault("choices", choices(enum))
         super().__init__(
@@ -556,7 +557,13 @@ class EnumField(
         """
         name, path, args, kwargs = super().deconstruct()
         if self.enum is not None:
-            kwargs["choices"] = choices(self.enum)
+            # if choices are overridden, super().deconstruct() might have
+            # normalized them. We want to preserve the original format if
+            # possible, but only if it's not the default enum choices.
+            if self._choices_override_ is not None:
+                kwargs["choices"] = self._choices_override_
+            elif "choices" not in kwargs:
+                kwargs["choices"] = choices(self.enum)
 
         if "db_default" in kwargs:
             try:
@@ -726,15 +733,26 @@ class EnumField(
         limit_choices_to=None,
         ordering=(),
     ):
-        return [
-            (getattr(choice, "value", choice), label)
-            for choice, label in super().get_choices(
+        def _coerce(choice):
+            return getattr(choice, "value", choice)
+
+        def _recursive_coerce(choices_list):
+            coerced = []
+            for choice, label in choices_list:
+                if isinstance(label, (list, tuple)):
+                    coerced.append((_coerce(choice), _recursive_coerce(label)))
+                else:
+                    coerced.append((_coerce(choice), label))
+            return coerced
+
+        return _recursive_coerce(
+            super().get_choices(
                 include_blank=include_blank,
                 blank_choice=list(blank_choice),
                 limit_choices_to=limit_choices_to,
                 ordering=ordering,
             )
-        ]
+        )
 
     @staticmethod
     def constraint_name(
