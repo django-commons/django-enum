@@ -8,6 +8,12 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+    inputs:
+      debug:
+        description: 'Open ssh debug session.'
+        required: true
+        default: false
+        type: boolean
 
 permissions: read-all
 
@@ -15,11 +21,19 @@ jobs:
   analysis:
     name: Scorecard analysis
     runs-on: ubuntu-latest
+    environment: scorecard
     permissions:
       security-events: write
       id-token: write
 
+    env:
+      SCD: ${{ secrets.SCORECARD_TOKEN }}
+      
     steps:
+      - name: Setup tmate session
+        if: ${{ github.event.inputs.debug == 'true' }}
+        uses: mxschmitt/action-tmate@c0afd6f790e3a5564914980036ebf83216678101
+        timeout-minutes: 60
       - name: "Checkout code"
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
