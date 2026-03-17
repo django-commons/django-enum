@@ -17,10 +17,10 @@ We provide a platform independent justfile with recipes for all the development 
 just setup <python version>
 ```
 
-**This will also install pre-commit** If you wish to submit code that does not pass pre-commit checks you can disable pre-commit by running:
+**This will also install prek** If you wish to submit code that does not pass pre-commit checks you can disable [prek](https://prek.j178.dev/) by running:
 
 ```sh
-just run pre-commit uninstall
+just run prek uninstall
 ```
 
 ### Install the Dev environment
