@@ -36,8 +36,7 @@ setup python="python":
 
 # install git pre-commit hooks
 install-prek:
-    uv tool install prek
-    uv run prek install
+    uvx prek install
 
 # update and install development dependencies
 install *OPTS="--all-extras":
