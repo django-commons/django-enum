@@ -277,7 +277,7 @@ debug-test *TESTS:
 
 # run the pre-commit checks
 prek:
-    @just run prek run
+    uvx prek run
 
 # generate the test coverage report
 coverage:
