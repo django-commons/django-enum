@@ -8,12 +8,6 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
-    inputs:
-      debug:
-        description: 'Open ssh debug session.'
-        required: true
-        default: false
-        type: boolean
 
 permissions: read-all
 
@@ -25,9 +19,6 @@ jobs:
     permissions:
       security-events: write
       id-token: write
-
-    env:
-      SCD: ${{ secrets.SCORECARD_TOKEN }}
       
     steps:
       - name: Setup tmate session
