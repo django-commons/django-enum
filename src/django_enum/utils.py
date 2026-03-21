@@ -1,5 +1,4 @@
 """Utility routines for django_enum."""
-from django import VERSION as django_version
 
 import sys
 from datetime import date, datetime, time, timedelta
