@@ -13,6 +13,8 @@ from typing import (
     get_args,
 )
 
+from django import VERSION as django_version
+
 __all__ = [
     "choices",
     "names",
@@ -27,6 +29,7 @@ __all__ = [
     "decompose",
     "members",
     "normalize_choices",
+    "django_version",
 ]
 
 
