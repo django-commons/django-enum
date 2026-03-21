@@ -1,7 +1,7 @@
 import pytest
 from django.db import models
 from django_enum import EnumField
-from django_enum.choices import IntegerChoices
+from django.db.models import IntegerChoices
 from django import VERSION as django_version
 
 
