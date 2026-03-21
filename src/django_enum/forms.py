@@ -100,11 +100,15 @@ class NonStrictMixin:
                     elif k == val:
                         return True
                 return False
-            for choice, label in choices_to_search:
-                if isinstance(label, (list, tuple)):
-                    if _has_value(label):
+            for item in choices_to_search:
+                if isinstance(item, (list, tuple)) and len(item) == 2:
+                    choice, label = item
+                    if isinstance(label, (list, tuple)):
+                        if _has_value(label):
+                            return True
+                    elif choice == val:
                         return True
-                elif choice == val:
+                elif item == val:
                     return True
             return False
 
@@ -387,6 +391,11 @@ class ChoiceFieldMixin(
             assert isinstance(empty_values, list)
             self.empty_values = empty_values
             self._empty_values_overridden_ = True
+
+        from django_enum.utils import django_version, normalize_choices
+
+        if django_version < (5, 0) and choices:
+            choices = normalize_choices(choices)
 
         super().__init__(
             choices=choices or getattr(self.enum, "choices", choices),

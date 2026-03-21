@@ -467,6 +467,12 @@ class EnumField(
         self._choices_override_ = kwargs.get("choices")
         if self.enum is not None:
             kwargs.setdefault("choices", choices(enum))
+
+        if django_version < (5, 0) and "choices" in kwargs:
+            from django_enum.utils import normalize_choices
+
+            kwargs["choices"] = normalize_choices(kwargs["choices"])
+
         super().__init__(
             null=kwargs.pop("null", False) or None in values(self.enum), **kwargs
         )
@@ -738,11 +744,15 @@ class EnumField(
 
         def _recursive_coerce(choices_list):
             coerced = []
-            for choice, label in choices_list:
-                if isinstance(label, (list, tuple)):
-                    coerced.append((_coerce(choice), _recursive_coerce(label)))
+            for item in choices_list:
+                if isinstance(item, (list, tuple)) and len(item) == 2:
+                    choice, label = item
+                    if isinstance(label, (list, tuple)):
+                        coerced.append((_coerce(choice), _recursive_coerce(label)))
+                    else:
+                        coerced.append((_coerce(choice), label))
                 else:
-                    coerced.append((_coerce(choice), label))
+                    coerced.append((_coerce(item), item))
             return coerced
 
         return _recursive_coerce(
