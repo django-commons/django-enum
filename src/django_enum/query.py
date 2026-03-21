@@ -27,7 +27,7 @@ class HasAllFlagsLookup(Exact):
         return lhs_sql, lhs_params
 
     def get_rhs_op(self, connection, rhs):
-        return connection.operators["exact"] % rhs
+        return connection.operators["exact"] % rhs  # type: ignore[attr-defined]
 
 
 # class ExtraBigFlagMixin:

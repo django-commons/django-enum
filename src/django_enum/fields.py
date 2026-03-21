@@ -805,8 +805,8 @@ class EnumField(
                 constraint |= Q(**{f"{self.name or name}__isnull": True})
             cls._meta.constraints = [
                 *cls._meta.constraints,
-                CheckConstraint(
-                    check=constraint,
+                CheckConstraint(  # type: ignore[call-arg]
+                    check=constraint,  # type: ignore[call-arg]
                     name=self.constraint_name(cls, self.name or name, self.enum),
                 )
                 if django_version[0:2] < (5, 1)
@@ -1272,8 +1272,8 @@ class FlagField(IntEnumField[FlagT], Generic[PrimitiveT, FlagT]):  # type: ignor
 
                 cls._meta.constraints = [
                     *cls._meta.constraints,
-                    CheckConstraint(
-                        check=constraint,
+                    CheckConstraint(  # type: ignore[call-arg]
+                        check=constraint,  # type: ignore[call-arg]
                         name=self.constraint_name(cls, self.name or name, self.enum),
                     )
                     if django_version[0:2] < (5, 1)

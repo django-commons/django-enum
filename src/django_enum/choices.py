@@ -25,7 +25,7 @@ __all__ = ["TextChoices", "IntegerChoices", "FloatChoices", "FlagChoices"]
 ChoicesType = (
     model_enums.ChoicesType
     if django_version[0:2] >= (5, 0)
-    else model_enums.ChoicesMeta
+    else getattr(model_enums, "ChoicesMeta")  # removed in Django 5.0
 )
 
 DEFAULT_BOUNDARY = getattr(enum, "KEEP", None)

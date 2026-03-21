@@ -32,11 +32,11 @@ install-uv:
 # setup the venv, pre-commit hooks
 setup python="python":
     uv venv -p {{ python }}
-    @just install-precommit
+    @just install-prek
 
 # install git pre-commit hooks
-install-precommit:
-    @just run --no-default-groups --group precommit --exact --isolated pre-commit install
+install-prek:
+    uvx prek install
 
 # update and install development dependencies
 install *OPTS="--all-extras":
@@ -275,8 +275,8 @@ debug-test *TESTS:
       --headed {{ TESTS }}
 
 # run the pre-commit checks
-precommit:
-    @just run pre-commit
+prek:
+    uvx prek run
 
 # generate the test coverage report
 coverage:

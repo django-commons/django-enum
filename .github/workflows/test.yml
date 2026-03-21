@@ -776,6 +776,7 @@ jobs:
   coverage-combine:
     needs: [postgres, sqlite, mysql, mariadb, oracle, windows, macos]
     runs-on: ubuntu-latest
+    environment: codecov
     permissions:
       contents: read
     steps:
