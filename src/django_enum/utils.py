@@ -13,6 +13,8 @@ from typing import (
     get_args,
 )
 
+from django import VERSION as django_version
+
 __all__ = [
     "choices",
     "names",
@@ -26,6 +28,8 @@ __all__ = [
     "get_set_bits",
     "decompose",
     "members",
+    "normalize_choices",
+    "django_version",
 ]
 
 
@@ -323,3 +327,22 @@ def members(enum: type[E], aliases: bool = True) -> Generator[E, None, None]:
         else:
             for name in enum._member_names_:
                 yield enum[name]  # type: ignore[misc]
+
+
+def normalize_choices(choices):
+    """
+    Standardize choices for Django < 5.0.
+    In Django 5.0, choices can be a dict or a callable.
+    """
+    if callable(choices):
+        choices = choices()
+    if isinstance(choices, dict):
+        return [
+            (
+                (key, normalize_choices(value))
+                if isinstance(value, dict)
+                else (key, value)
+            )
+            for key, value in choices.items()
+        ]
+    return choices
