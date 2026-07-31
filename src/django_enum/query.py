@@ -3,31 +3,28 @@ Specialized has_any and has_all query lookups for flag enumerations.
 """
 
 # from django.core.exceptions import FieldError
-from django.db.models.lookups import Exact, Lookup
+from django.db.models.lookups import Lookup
 
 # from django_enum.utils import get_set_bits
 
 
-class HasAllFlagsLookup(Exact):
+class HasAllFlagsLookup(Lookup):
     """
-    Extend Exact lookup to support lookup on has all flags. This lookup bitwise
-    ANDs the column with the lookup value and checks that the result is equal
-    to the lookup value.
+    Query whether the left-hand side has all the bit flags on the right-hand
+    side. This lookup bitwise ANDs the left-hand side with the right-hand side
+    and checks that the result is equal to the right-hand side.
     """
 
     lookup_name = "has_all"
 
-    def process_lhs(self, compiler, connection, lhs=None):
-        lhs_sql, lhs_params = super().process_lhs(compiler, connection, lhs)
-        rhs_sql, rhs_params = super().process_rhs(compiler, connection)
-        if self.rhs:
-            return (
-                "BITAND(%s, %s)" if connection.vendor == "oracle" else "%s & %s"
-            ) % (lhs_sql, rhs_sql), [*lhs_params, *rhs_params]
-        return lhs_sql, lhs_params
-
-    def get_rhs_op(self, connection, rhs):
-        return connection.operators["exact"] % rhs  # type: ignore[attr-defined]
+    def as_sql(self, compiler, connection):
+        lhs_sql, lhs_params = self.process_lhs(compiler, connection)
+        rhs_sql, rhs_params = self.process_rhs(compiler, connection)
+        return (
+            f"BITAND({lhs_sql}, {rhs_sql}) = {rhs_sql}"
+            if connection.vendor == "oracle"
+            else f"{lhs_sql} & {rhs_sql} = {rhs_sql}"
+        ), [*lhs_params, *rhs_params, *rhs_params]
 
 
 # class ExtraBigFlagMixin:

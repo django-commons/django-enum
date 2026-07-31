@@ -184,8 +184,14 @@ class FlagTests(TestCase):
             cont8 = self.MODEL_CLASS.objects.filter(
                 **{f"{field}__has_all": EnumClass(0)}
             )
-            self.assertEqual(cont8.count(), empties[field])
+            self.assertEqual(
+                cont8.count(),
+                self.MODEL_CLASS.objects.filter(**{f"{field}__isnull": False}).count(),
+            )
             self.assertIn(empty, cont8)
+            self.assertIn(obj, cont8)
+            self.assertIn(obj2, cont8)
+            self.assertIn(obj3, cont8)
 
             cont9 = self.MODEL_CLASS.objects.filter(**{field: EnumClass(0)})
             self.assertEqual(cont9.count(), empties[field])
