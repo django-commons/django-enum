@@ -718,11 +718,11 @@ class EnumField(
 
     def get_choices(
         self,
-        include_blank=True,
-        blank_choice=tuple(BLANK_CHOICE_DASH),
-        limit_choices_to=None,
-        ordering=(),
-    ):
+        include_blank: bool = True,
+        blank_choice: Sequence[tuple[Any, Any]] = tuple(BLANK_CHOICE_DASH),
+        limit_choices_to: Any = None,
+        ordering: Sequence[str] = (),
+    ) -> list[tuple[Any, Any]]:
         return [
             (getattr(choice, "value", choice), label)
             for choice, label in super().get_choices(

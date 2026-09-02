@@ -20,7 +20,7 @@ assert instance.color != 'Red'  # because label is not symmetric
 instance.color = 'FF0000'
 
 # access any enum property right from the model field
-assert instance.color.hex == 'ff0000'
+assert instance.color.hex == 'ff0000'  # pyright: ignore[reportAttributeAccessIssue]
 
 # this also works!
 assert instance.color == 'ff0000'
