@@ -308,7 +308,7 @@ class ConstraintTests(EnumTypeMixin, TestCase):
     if sys.version_info >= (3, 11):
 
         def test_flag_constraints(self):
-            from django.db.models import PositiveSmallIntegerField
+            from django.db.models import PositiveSmallIntegerField, SmallIntegerField
             from django.db.utils import IntegrityError
 
             from tests.flag_constraints.enums import (
@@ -335,11 +335,16 @@ class ConstraintTests(EnumTypeMixin, TestCase):
             self.assertEqual(conform_field.bit_length, 15)
             self.assertEqual(strict_field.bit_length, 15)
 
-            self.assertIsInstance(keep_field, PositiveSmallIntegerField)
-            self.assertIsInstance(eject_field, PositiveSmallIntegerField)
-            self.assertIsInstance(eject_non_strict_field, PositiveSmallIntegerField)
-            self.assertIsInstance(conform_field, PositiveSmallIntegerField)
-            self.assertIsInstance(strict_field, PositiveSmallIntegerField)
+            # flag fields use signed columns so the sign bit is usable
+            for field in [
+                keep_field,
+                eject_field,
+                eject_non_strict_field,
+                conform_field,
+                strict_field,
+            ]:
+                self.assertIsInstance(field, SmallIntegerField)
+                self.assertNotIsInstance(field, PositiveSmallIntegerField)
 
             # just some sanity checks to confirm how these enums behave
 

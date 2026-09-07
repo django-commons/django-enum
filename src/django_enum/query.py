@@ -20,11 +20,15 @@ class HasAllFlagsLookup(Lookup):
     def as_sql(self, compiler, connection):
         lhs_sql, lhs_params = self.process_lhs(compiler, connection)
         rhs_sql, rhs_params = self.process_rhs(compiler, connection)
-        return (
-            f"BITAND({lhs_sql}, {rhs_sql}) = {rhs_sql}"
-            if connection.vendor == "oracle"
-            else f"{lhs_sql} & {rhs_sql} = {rhs_sql}"
-        ), [*lhs_params, *rhs_params, *rhs_params]
+        if connection.vendor == "oracle":
+            sql = f"BITAND({lhs_sql}, {rhs_sql}) = {rhs_sql}"
+        elif connection.vendor == "mysql":
+            # MySQL/MariaDB bitwise operators yield BIGINT UNSIGNED, cast back
+            # so a right hand side with the sign bit set compares equal
+            sql = f"CAST({lhs_sql} & {rhs_sql} AS SIGNED) = {rhs_sql}"
+        else:
+            sql = f"{lhs_sql} & {rhs_sql} = {rhs_sql}"
+        return sql, [*lhs_params, *rhs_params, *rhs_params]
 
 
 # class ExtraBigFlagMixin:

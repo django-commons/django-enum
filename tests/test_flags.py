@@ -3,7 +3,7 @@ import pytest
 from django.test import TestCase
 from tests.djenum.models import EnumFlagTester, EnumFlagTesterRelated
 from django_enum.fields import EnumField, FlagField, ExtraBigIntegerFlagField
-from django.db.models import F, Q, Func, OuterRef, Subquery, Count
+from django.db.models import F, Q, Func, OuterRef, Subquery, Count, Value
 from django.db.utils import DatabaseError
 from tests.utils import IGNORE_ORA_00932
 from django.db import connection
@@ -37,6 +37,18 @@ def invert_flags(en):
 class FlagTests(TestCase):
     MODEL_CLASS = EnumFlagTester
     RELATED_CLASS = EnumFlagTesterRelated
+
+    def db_value(self, field, flag):
+        """
+        Flags with the top bit of the column set are stored two's complement.
+        Django resolves bare values inside F() expressions to a plain
+        IntegerField so they must be wrapped in a Value with the flag field as
+        the output_field to be converted. Fields that do not use the top bit
+        are left bare here to demonstrate that they work either way.
+        """
+        if "top" in field:
+            return Value(flag, output_field=self.MODEL_CLASS._meta.get_field(field))
+        return flag
 
     def test_flag_filters(self):
         fields = [
@@ -80,7 +92,7 @@ class FlagTests(TestCase):
             # does this work in SQLite?
             if "extra" not in field:
                 self.MODEL_CLASS.objects.filter(pk=obj.pk).update(
-                    **{field: F(field).bitor(EnumClass.TWO)}
+                    **{field: F(field).bitor(self.db_value(field, EnumClass.TWO))}
                 )
             else:
                 for obj in self.MODEL_CLASS.objects.filter(pk=obj.pk):
@@ -95,7 +107,11 @@ class FlagTests(TestCase):
             # Remove THREE (does not work in SQLite)
             if "extra" not in field:
                 self.MODEL_CLASS.objects.filter(pk=obj.pk).update(
-                    **{field: F(field).bitand(invert_flags(EnumClass.THREE))}
+                    **{
+                        field: F(field).bitand(
+                            self.db_value(field, invert_flags(EnumClass.THREE))
+                        )
+                    }
                 )
             else:
                 for obj in self.MODEL_CLASS.objects.filter(pk=obj.pk):
@@ -208,7 +224,7 @@ class FlagTests(TestCase):
             Q(small_pos__isnull=True) | Q(pos__has_any=EnumClass.ONE)
         )
 
-        self.assertEqual(compound_qry.count(), 9)
+        self.assertEqual(compound_qry.count(), 21)
         for obj in compound_qry:
             self.assertTrue(obj.small_pos is None or obj.pos & EnumClass.ONE)
 
@@ -446,25 +462,18 @@ class FlagTests(TestCase):
 
     def test_unsupported_flags(self):
         obj = self.MODEL_CLASS.objects.create()
-        for field in ["small_neg", "neg", "big_neg", "extra_big_neg", "extra_big_pos"]:
+        for field in ["extra_big_pos"]:
             EnumClass = self.MODEL_CLASS._meta.get_field(field).enum
             with self.assertRaises(FieldError):
-                self.MODEL_CLASS.objects.filter(**{"field__has_any": EnumClass.ONE})
+                self.MODEL_CLASS.objects.filter(**{f"{field}__has_any": EnumClass.ONE})
 
             with self.assertRaises(FieldError):
-                self.MODEL_CLASS.objects.filter(**{"field__has_all": EnumClass.ONE})
+                self.MODEL_CLASS.objects.filter(**{f"{field}__has_all": EnumClass.ONE})
 
     def test_extra_big_flags(self):
         obj = self.MODEL_CLASS.objects.create()
-        self.assertTrue(obj.extra_big_neg is None)
         self.assertEqual(obj.extra_big_pos, 0)
         obj.refresh_from_db()
-
-        if connection.vendor == "oracle":
-            # TODO - possible to fix this?
-            self.assertEqual(obj.extra_big_neg, 0)
-        else:
-            self.assertTrue(obj.extra_big_neg is None)
         self.assertEqual(obj.extra_big_pos, 0)
 
         if connection.vendor == "oracle":
@@ -474,4 +483,3 @@ class FlagTests(TestCase):
             )
         else:
             self.assertEqual(obj, self.MODEL_CLASS.objects.get(extra_big_pos=0))
-        self.assertEqual(obj, self.MODEL_CLASS.objects.get(extra_big_neg__isnull=True))

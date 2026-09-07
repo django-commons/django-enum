@@ -17,10 +17,10 @@ class TestFieldTypeResolutionProps(TestFieldTypeResolution):
         tester = BitFieldModel.objects.create(
             bit_field_small=GNSSConstellation.GPS | GNSSConstellation.GLONASS
         )
-        from django.db.models import BinaryField, PositiveSmallIntegerField
+        from django.db.models import BinaryField, SmallIntegerField
 
         self.assertIsInstance(
-            tester._meta.get_field("bit_field_small"), PositiveSmallIntegerField
+            tester._meta.get_field("bit_field_small"), SmallIntegerField
         )
         self.assertIsInstance(tester._meta.get_field("bit_field_large"), BinaryField)
         self.assertIsInstance(tester._meta.get_field("large_neg"), BinaryField)

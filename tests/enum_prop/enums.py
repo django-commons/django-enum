@@ -384,33 +384,25 @@ class ExtraBigPositiveFlagEnum(FlagChoices):
     FIVE = 2**65, "Five", 5.5
 
 
-class SmallNegativeFlagEnum(FlagChoices):
-    ONE = -(2**11), "One"
-    TWO = -(2**12), "Two"
-    THREE = -(2**13), "Three"
-    FOUR = -(2**14), "Four"
-    FIVE = -(2**15), "Five"
+class SmallTopBitFlagEnum(FlagChoices):
+    ONE = 2**11, "One"
+    TWO = 2**12, "Two"
+    THREE = 2**13, "Three"
+    FOUR = 2**14, "Four"
+    FIVE = 2**15, "Five"
 
 
-class NegativeFlagEnum(FlagChoices):
-    ONE = -(2**27), "One"
-    TWO = -(2**28), "Two"
-    THREE = -(2**29), "Three"
-    FOUR = -(2**30), "Four"
-    FIVE = -(2**31), "Five"
+class TopBitFlagEnum(FlagChoices):
+    ONE = 2**27, "One"
+    TWO = 2**28, "Two"
+    THREE = 2**29, "Three"
+    FOUR = 2**30, "Four"
+    FIVE = 2**31, "Five"
 
 
-class BigNegativeFlagEnum(FlagChoices):
-    ONE = -(2**59), "One"
-    TWO = -(2**60), "Two"
-    THREE = -(2**61), "Three"
-    FOUR = -(2**62), "Four"
-    FIVE = -(2**63), "Five"
-
-
-class ExtraBigNegativeFlagEnum(FlagChoices):
-    ONE = -(2**62), "One"
-    TWO = -(2**63), "Two"
-    THREE = -(2**64), "Three"
-    FOUR = -(2**65), "Four"
-    FIVE = -(2**66), "Five"
+class BigTopBitFlagEnum(FlagChoices):
+    ONE = 2**59, "One"
+    TWO = 2**60, "Two"
+    THREE = 2**61, "Three"
+    FOUR = 2**62, "Four"
+    FIVE = 2**63, "Five"

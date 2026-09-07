@@ -6,7 +6,7 @@ import typing as t
 from django_enum import EnumField
 from tests.enum_prop.enums import (
     BigIntEnum,
-    BigNegativeFlagEnum,
+    BigTopBitFlagEnum,
     BigPosIntEnum,
     BigPositiveFlagEnum,
     Constants,
@@ -17,17 +17,16 @@ from tests.enum_prop.enums import (
     DJTextEnum,
     DurationEnum,
     ExternEnum,
-    ExtraBigNegativeFlagEnum,
     ExtraBigPositiveFlagEnum,
     GNSSConstellation,
     IntEnum,
     LargeBitField,
     LargeNegativeField,
-    NegativeFlagEnum,
+    TopBitFlagEnum,
     PosIntEnum,
     PositiveFlagEnum,
     SmallIntEnum,
-    SmallNegativeFlagEnum,
+    SmallTopBitFlagEnum,
     SmallPosIntEnum,
     SmallPositiveFlagEnum,
     TextEnum,
@@ -412,26 +411,19 @@ class BaseEnumFlagPropTester(models.Model):
         blank=True,
     )
 
-    small_neg = EnumField(
-        SmallNegativeFlagEnum,
-        default=SmallNegativeFlagEnum(0),
+    small_top = EnumField(
+        SmallTopBitFlagEnum,
+        default=SmallTopBitFlagEnum(0),
         db_index=True,
         blank=True,
     )
 
-    neg = EnumField(
-        NegativeFlagEnum, default=NegativeFlagEnum(0), db_index=True, blank=True
+    top = EnumField(
+        TopBitFlagEnum, default=TopBitFlagEnum(0), db_index=True, blank=True
     )
 
-    big_neg = EnumField(
-        BigNegativeFlagEnum,
-        default=BigNegativeFlagEnum(0),
-        db_index=True,
-        blank=True,
-    )
-
-    extra_big_neg = EnumField(
-        ExtraBigNegativeFlagEnum, default=None, db_index=True, blank=True, null=True
+    big_top = EnumField(
+        BigTopBitFlagEnum, default=BigTopBitFlagEnum(0), db_index=True, blank=True
     )
 
     def __repr__(self):
@@ -440,9 +432,8 @@ class BaseEnumFlagPropTester(models.Model):
             f"pos={repr(self.pos)}, "
             f"big_pos={repr(self.big_pos)}, "
             f"extra_big_pos={repr(self.extra_big_pos)}, "
-            f"small_neg={repr(self.small_neg)}, neg={repr(self.neg)}, "
-            f"big_neg={repr(self.big_neg)}, "
-            f"extra_big_neg={repr(self.extra_big_neg)})"
+            f"small_top={repr(self.small_top)}, top={repr(self.top)}, "
+            f"big_top={repr(self.big_top)})"
         )
 
     class Meta:
