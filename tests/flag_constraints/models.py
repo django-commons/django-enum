@@ -9,7 +9,9 @@ if sys.version_info >= (3, 11):
         ConformFlagEnum,
         EjectFlagEnum,
         KeepFlagEnum,
+        StrictBigTopBitFlagEnum,
         StrictFlagEnum,
+        StrictTopBitFlagEnum,
     )
 
     class FlagConstraintTestModel(models.Model):
@@ -26,3 +28,9 @@ if sys.version_info >= (3, 11):
         )
         conform = EnumField(ConformFlagEnum, null=True, default=None, blank=True)
         strict = EnumField(StrictFlagEnum, null=True, default=None, blank=True)
+        strict_top = EnumField(
+            StrictTopBitFlagEnum, null=True, default=None, blank=True
+        )
+        strict_big_top = EnumField(
+            StrictBigTopBitFlagEnum, null=False, default=StrictBigTopBitFlagEnum(0)
+        )

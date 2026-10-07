@@ -53,56 +53,54 @@ class TestFieldTypeResolution(EnumTypeMixin, TestCase):
         self.assertIsInstance(self.MODEL_CLASS._meta.get_field("text"), CharField)
         self.assertIsInstance(self.MODEL_CLASS._meta.get_field("constant"), FloatField)
 
-        self.assertIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("small_neg"), SmallIntegerField
-        )
-        self.assertNotIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("small_neg"), FlagField
-        )
-        self.assertIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("small_pos"),
-            PositiveSmallIntegerField,
-        )
-        self.assertIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("small_pos"), SmallIntegerFlagField
+        # flag fields are stored in signed columns so that the sign bit is usable
+        for small in ["small_pos", "small_top"]:
+            self.assertIsInstance(
+                self.MODEL_FLAG_CLASS._meta.get_field(small), SmallIntegerField
+            )
+            self.assertNotIsInstance(
+                self.MODEL_FLAG_CLASS._meta.get_field(small),
+                PositiveSmallIntegerField,
+            )
+            self.assertIsInstance(
+                self.MODEL_FLAG_CLASS._meta.get_field(small), SmallIntegerFlagField
+            )
+            self.assertEqual(
+                self.MODEL_FLAG_CLASS._meta.get_field(small).db_bit_length, 16
+            )
+
+        for medium in ["pos", "top"]:
+            self.assertIsInstance(
+                self.MODEL_FLAG_CLASS._meta.get_field(medium), IntegerField
+            )
+            self.assertNotIsInstance(
+                self.MODEL_FLAG_CLASS._meta.get_field(medium), PositiveIntegerField
+            )
+            self.assertIsInstance(
+                self.MODEL_FLAG_CLASS._meta.get_field(medium), IntegerFlagField
+            )
+            self.assertEqual(
+                self.MODEL_FLAG_CLASS._meta.get_field(medium).db_bit_length, 32
+            )
+
+        for big in ["big_pos", "big_top"]:
+            self.assertIsInstance(
+                self.MODEL_FLAG_CLASS._meta.get_field(big), BigIntegerField
+            )
+            self.assertNotIsInstance(
+                self.MODEL_FLAG_CLASS._meta.get_field(big), PositiveBigIntegerField
+            )
+            self.assertIsInstance(
+                self.MODEL_FLAG_CLASS._meta.get_field(big), BigIntegerFlagField
+            )
+            self.assertEqual(
+                self.MODEL_FLAG_CLASS._meta.get_field(big).db_bit_length, 64
+            )
+
+        self.assertIsNone(
+            self.MODEL_FLAG_CLASS._meta.get_field("extra_big_pos").db_bit_length
         )
 
-        self.assertIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("neg"), IntegerField
-        )
-        self.assertNotIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("neg"), FlagField
-        )
-        self.assertIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("pos"), PositiveIntegerField
-        )
-        self.assertIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("pos"), IntegerFlagField
-        )
-
-        self.assertIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("big_neg"), BigIntegerField
-        )
-        self.assertNotIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("big_neg"), FlagField
-        )
-        self.assertIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("big_pos"), PositiveBigIntegerField
-        )
-        self.assertIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("big_pos"), BigIntegerFlagField
-        )
-
-        self.assertIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("extra_big_neg"),
-            EnumExtraBigIntegerField,
-        )
-        self.assertNotIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("extra_big_neg"), FlagField
-        )
-        self.assertIsInstance(
-            self.MODEL_FLAG_CLASS._meta.get_field("extra_big_neg"), BinaryField
-        )
         self.assertIsInstance(
             self.MODEL_FLAG_CLASS._meta.get_field("extra_big_pos"),
             ExtraBigIntegerFlagField,
@@ -129,23 +127,20 @@ class TestFieldTypeResolution(EnumTypeMixin, TestCase):
         self.assertEqual(self.MODEL_CLASS._meta.get_field("constant").primitive, float)
 
         self.assertEqual(
-            self.MODEL_FLAG_CLASS._meta.get_field("small_neg").primitive, int
+            self.MODEL_FLAG_CLASS._meta.get_field("small_top").primitive, int
         )
         self.assertEqual(
             self.MODEL_FLAG_CLASS._meta.get_field("small_pos").primitive, int
         )
 
-        self.assertEqual(self.MODEL_FLAG_CLASS._meta.get_field("neg").primitive, int)
+        self.assertEqual(self.MODEL_FLAG_CLASS._meta.get_field("top").primitive, int)
         self.assertEqual(self.MODEL_FLAG_CLASS._meta.get_field("pos").primitive, int)
 
         self.assertEqual(
-            self.MODEL_FLAG_CLASS._meta.get_field("big_neg").primitive, int
+            self.MODEL_FLAG_CLASS._meta.get_field("big_top").primitive, int
         )
         self.assertEqual(
             self.MODEL_FLAG_CLASS._meta.get_field("big_pos").primitive, int
-        )
-        self.assertEqual(
-            self.MODEL_FLAG_CLASS._meta.get_field("extra_big_neg").primitive, int
         )
         self.assertEqual(
             self.MODEL_FLAG_CLASS._meta.get_field("extra_big_pos").primitive, int

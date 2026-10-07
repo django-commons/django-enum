@@ -379,8 +379,15 @@ class EnumDecimalField(EnumField[Decimal, EnumT], Generic[EnumT]):
 # ---------------------------------------------------------------------------
 
 class FlagField(IntEnumField[FlagT], Generic[FlagT]):
-    """Base class for Flag enumeration fields with bitwise-operation support."""
+    """
+    Base class for Flag enumeration fields with bitwise-operation support.
 
+    Values are stored two's complement in a signed column of db_bit_length
+    bits so that the sign bit is usable as a flag.
+    """
+
+    @property
+    def db_bit_length(self) -> int | None: ...
     @overload
     def __new__(
         cls,
@@ -401,19 +408,15 @@ class FlagField(IntEnumField[FlagT], Generic[FlagT]):
     ) -> FlagField[_FT | None]: ...
 
 class SmallIntegerFlagField(
-    FlagField[FlagT], EnumPositiveSmallIntegerField[FlagT], Generic[FlagT]
+    FlagField[FlagT], EnumSmallIntegerField[FlagT], Generic[FlagT]
 ):
-    """Flag field stored in a PositiveSmallIntegerField (2 bytes)."""
+    """Flag field with up to 16 flags stored in a SmallIntegerField."""
 
-class IntegerFlagField(
-    FlagField[FlagT], EnumPositiveIntegerField[FlagT], Generic[FlagT]
-):
-    """Flag field stored in a PositiveIntegerField (32 bytes)."""
+class IntegerFlagField(FlagField[FlagT], EnumIntegerField[FlagT], Generic[FlagT]):
+    """Flag field with up to 32 flags stored in an IntegerField."""
 
-class BigIntegerFlagField(
-    FlagField[FlagT], EnumPositiveBigIntegerField[FlagT], Generic[FlagT]
-):
-    """Flag field stored in a PositiveBigIntegerField (64 bytes)."""
+class BigIntegerFlagField(FlagField[FlagT], EnumBigIntegerField[FlagT], Generic[FlagT]):
+    """Flag field with up to 64 flags stored in a BigIntegerField."""
 
 class EnumExtraBigIntegerField(IntEnumField[FlagT], BinaryField, Generic[FlagT]):
     """Enum field for integers wider than 64 bits, stored as binary."""

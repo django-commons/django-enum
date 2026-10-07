@@ -123,6 +123,7 @@ INSTALLED_APPS = [
     "tests.constraints",
     "tests.converters",
     "tests.djenum",
+    "tests.legacy_migrations",
     "tests.tmpls",
     # "debug_toolbar",
     # "django_extensions",

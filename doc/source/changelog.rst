@@ -10,6 +10,45 @@ v3.0.0 (2026-XX-XX)
 * Support Python 3.15
 * Drop support for Python 3.11
 * Drop support for Django 4.2
+* Fixed `Python 3.15 disallows negative flag values
+  <https://github.com/django-commons/django-enum/issues/216>`_
+* Fixed `Can only use 31 flag bits in a 32 bit integer?
+  <https://github.com/django-commons/django-enum/discussions/197>`_
+* Implemented `Need migration tests that follow django major versions progression.
+  <https://github.com/django-commons/django-enum/issues/112>`_
+
+Flag fields now use every bit of their column
+---------------------------------------------
+
+:class:`~django_enum.fields.FlagField` values are stored two's complement in a *signed* integer
+column, so the sign bit of a 16, 32 or 64 bit column is usable as a flag and is spelled the
+natural way, ``1 << 15``, ``1 << 31`` or ``1 << 63``. See :ref:`full_width_flags`. As a
+consequence:
+
+* :class:`~django_enum.fields.SmallIntegerFlagField`, :class:`~django_enum.fields.IntegerFlagField`
+  and :class:`~django_enum.fields.BigIntegerFlagField` now derive from
+  :class:`~django.db.models.SmallIntegerField`, :class:`~django.db.models.IntegerField` and
+  :class:`~django.db.models.BigIntegerField` rather than their ``Positive*`` counterparts.
+* An enumeration with up to 16, 32 or 64 flags resolves to a 16, 32 or 64 bit column. Previously
+  an enumeration whose highest flag was bit 15, 31 or 63 was promoted to the next column width (or
+  to :class:`~django_enum.fields.ExtraBigIntegerFlagField` for 64 flags). **If you have such an
+  enumeration, makemigrations will generate a column narrowing.** Convert existing rows that have
+  the top flag set before applying it, e.g. for a 32 bit column:
+  ``UPDATE table SET column = column - 4294967296 WHERE column >= 2147483648``, or pass
+  ``bit_length=`` to :class:`~django_enum.fields.EnumField` to keep the wider column.
+* Flag check constraints are now bit mask checks (``NOT (column & unused_bits <> 0)``) rather
+  than range checks. Constrained flag fields will get a ``RemoveConstraint`` / ``AddConstraint``
+  migration on upgrade.
+* :class:`~enum.Flag` types with negative values are no longer accepted by
+  :class:`~django_enum.fields.EnumField`. Python 3.15 rewrites such values so they cannot be
+  supported. If you used the ``-1 << 31`` recipe from discussion #197, change the value to
+  ``1 << 31`` and use the stock flag field: existing rows are read back correctly without a data
+  migration. See ``tests/legacy_migrations`` for a worked example.
+* :ref:`has_any` and :ref:`has_all` are registered on :class:`~django_enum.fields.FlagField`
+  so custom subclasses get them too.
+* A flag with the top bit set that is used inside an :class:`~django.db.models.F` expression
+  must be wrapped in a :class:`~django.db.models.Value` with the field as ``output_field``, see
+  :ref:`full_width_flags`.
 
 
 v2.5.0 (2026-07-31)

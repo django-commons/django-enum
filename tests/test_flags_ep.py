@@ -13,7 +13,7 @@ class FlagTestsProp(FlagTests):
     def test_prop_enum(self):
         from tests.enum_prop.enums import (
             GNSSConstellation,
-            SmallNegativeFlagEnum,
+            SmallTopBitFlagEnum,
             SmallPositiveFlagEnum,
         )
 
@@ -23,8 +23,8 @@ class FlagTestsProp(FlagTests):
         self.assertEqual(GNSSConstellation.BEIDOU, GNSSConstellation("BeiDou"))
         self.assertEqual(GNSSConstellation.QZSS, GNSSConstellation("qzss"))
 
-        self.assertEqual(choices(SmallNegativeFlagEnum), SmallNegativeFlagEnum.choices)
-        self.assertEqual(names(SmallNegativeFlagEnum), SmallNegativeFlagEnum.names)
+        self.assertEqual(choices(SmallTopBitFlagEnum), SmallTopBitFlagEnum.choices)
+        self.assertEqual(names(SmallTopBitFlagEnum), SmallTopBitFlagEnum.names)
 
         self.assertEqual(choices(SmallPositiveFlagEnum), SmallPositiveFlagEnum.choices)
         self.assertEqual(names(SmallPositiveFlagEnum), SmallPositiveFlagEnum.names)
