@@ -134,12 +134,12 @@ jobs:
           persist-credentials: false
       - name: Set up Python ${{ matrix.python-version }}
         id: sp
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
       - name: Install uv
-        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
         with:
           enable-cache: false
       - name: Setup Just
@@ -160,12 +160,12 @@ jobs:
         run: |
           just test-all --group "$TEST_DATABASE_CLIENT_VERSION" -p "$TEST_PYTHON" --group "$TEST_DJANGO_VERSION" --resolution "$DEPENDENCY_RESOLUTION"
       - name: Store coverage files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
       - name: Store env files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: requirements-${{ env.COVERAGE_FILE }}.txt
           path: requirements-test*.txt
@@ -209,13 +209,13 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
       - name: Install uv
-        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
         with:
           enable-cache: false
       - name: Setup Just
@@ -236,12 +236,12 @@ jobs:
         run: |
           just test-all -p "$TEST_PYTHON" --group "$TEST_DJANGO_VERSION" --resolution "$DEPENDENCY_RESOLUTION"
       - name: Store coverage files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
       - name: Store env files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: requirements-${{ env.COVERAGE_FILE }}.txt
           path: requirements-test*.txt
@@ -326,7 +326,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
@@ -340,7 +340,7 @@ jobs:
         uses: mxschmitt/action-tmate@35b54afac29c97fb54faba5b513f8fbd1882f113
         timeout-minutes: 60
       - name: Install uv
-        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
         with:
           enable-cache: false
       - name: Setup Just
@@ -353,12 +353,12 @@ jobs:
         run: |
           just test-all --group "$TEST_DATABASE_CLIENT_VERSION" -p "$TEST_PYTHON" --group "$TEST_DJANGO_VERSION" --resolution "$DEPENDENCY_RESOLUTION"
       - name: Store coverage files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
       - name: Store env files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: requirements-${{ env.COVERAGE_FILE }}.txt
           path: requirements-test*.txt
@@ -449,7 +449,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
@@ -463,7 +463,7 @@ jobs:
         uses: mxschmitt/action-tmate@35b54afac29c97fb54faba5b513f8fbd1882f113
         timeout-minutes: 60
       - name: Install uv
-        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
         with:
           enable-cache: false
       - name: Setup Just
@@ -476,12 +476,12 @@ jobs:
         run: |
           just test-all --group "$TEST_DATABASE_CLIENT_VERSION" -p "$TEST_PYTHON" --group "$TEST_DJANGO_VERSION" --resolution "$DEPENDENCY_RESOLUTION"
       - name: Store coverage files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
       - name: Store env files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: requirements-${{ env.COVERAGE_FILE }}.txt
           path: requirements-test*.txt
@@ -569,7 +569,7 @@ jobs:
           persist-credentials: false
       - name: Set up Python ${{ matrix.python-version }}
         id: sp
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
@@ -582,7 +582,7 @@ jobs:
         uses: mxschmitt/action-tmate@35b54afac29c97fb54faba5b513f8fbd1882f113
         timeout-minutes: 60
       - name: Install uv
-        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
         with:
           enable-cache: false
       - name: Setup Just
@@ -610,12 +610,12 @@ jobs:
         run: |
           just test-all --group oracledb -p "$TEST_PYTHON" --group "$TEST_DJANGO_VERSION" --resolution "$DEPENDENCY_RESOLUTION"
       - name: Store coverage files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
       - name: Store env files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: requirements-${{ env.COVERAGE_FILE }}.txt
           path: requirements-test*.txt
@@ -659,13 +659,13 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
       - name: Install uv
-        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
         with:
           enable-cache: false
       - name: Setup Just
@@ -686,12 +686,12 @@ jobs:
           just test-all -p "$env:TEST_PYTHON" --group "$env:TEST_DJANGO_VERSION" --resolution "$env:DEPENDENCY_RESOLUTION"
         shell: pwsh
       - name: Store coverage files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
       - name: Store env files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: requirements-${{ env.COVERAGE_FILE }}.txt
           path: requirements-test*.txt
@@ -734,13 +734,13 @@ jobs:
         with:
           persist-credentials: false
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         id: sp
         with:
           python-version: ${{ matrix.python-version }}
           allow-prereleases: true
       - name: Install uv
-        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
         with:
           enable-cache: false
       - name: Setup Just
@@ -761,12 +761,12 @@ jobs:
         run: |
           just test-all -p "$TEST_PYTHON" --group "$TEST_DJANGO_VERSION" --resolution "$DEPENDENCY_RESOLUTION"
       - name: Store coverage files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ${{ env.COVERAGE_FILE }}
           path: ${{ env.COVERAGE_FILE }}
       - name: Store env files
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: requirements-${{ env.COVERAGE_FILE }}.txt
           path: requirements-test*.txt
@@ -785,12 +785,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
         id: sp
         with:
           python-version: "3.12"
       - name: Install uv
-        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2
         with:
           enable-cache: false
       - name: Setup Just
@@ -798,7 +798,7 @@ jobs:
         with:
           just-version: "1.58.0"
       - name: Get coverage files
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           pattern: "*.coverage"
           merge-multiple: true
@@ -806,7 +806,7 @@ jobs:
       - run: just coverage
 
       - name: Store merged coverage
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: coverage-merged
           path: |
