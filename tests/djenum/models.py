@@ -8,7 +8,7 @@ from django.urls import reverse
 from django_enum import EnumField
 from tests.djenum.enums import (
     BigIntEnum,
-    BigNegativeFlagEnum,
+    BigTopBitFlagEnum,
     BigPosIntEnum,
     BigPositiveFlagEnum,
     Constants,
@@ -19,19 +19,18 @@ from tests.djenum.enums import (
     DJTextEnum,
     DurationEnum,
     ExternEnum,
-    ExtraBigNegativeFlagEnum,
     ExtraBigPositiveFlagEnum,
     IntEnum,
     MultiPrimitiveEnum,
     MultiWithNone,
-    NegativeFlagEnum,
+    TopBitFlagEnum,
     NullableExternEnum,
     NullableStrEnum,
     PathEnum,
     PosIntEnum,
     PositiveFlagEnum,
     SmallIntEnum,
-    SmallNegativeFlagEnum,
+    SmallTopBitFlagEnum,
     SmallPosIntEnum,
     SmallPositiveFlagEnum,
     StrProps,
@@ -205,23 +204,19 @@ class EnumFlagTesterBase(models.Model):
         blank=True,
     )
 
-    small_neg = EnumField(
-        SmallNegativeFlagEnum,
-        default=SmallNegativeFlagEnum(0),
+    small_top = EnumField(
+        SmallTopBitFlagEnum,
+        default=SmallTopBitFlagEnum(0),
         db_index=True,
         blank=True,
     )
 
-    neg = EnumField(
-        NegativeFlagEnum, default=NegativeFlagEnum(0), db_index=True, blank=True
+    top = EnumField(
+        TopBitFlagEnum, default=TopBitFlagEnum(0), db_index=True, blank=True
     )
 
-    big_neg = EnumField(
-        BigNegativeFlagEnum, default=BigNegativeFlagEnum(0), db_index=True, blank=True
-    )
-
-    extra_big_neg = EnumField(
-        ExtraBigNegativeFlagEnum, default=None, db_index=True, blank=True, null=True
+    big_top = EnumField(
+        BigTopBitFlagEnum, default=BigTopBitFlagEnum(0), db_index=True, blank=True
     )
 
     def __repr__(self):
@@ -230,9 +225,8 @@ class EnumFlagTesterBase(models.Model):
             f"pos={repr(self.pos)}, "
             f"big_pos={repr(self.big_pos)}, "
             f"extra_big_pos={repr(self.extra_big_pos)}, "
-            f"small_neg={repr(self.small_neg)}, neg={repr(self.neg)}, "
-            f"big_neg={repr(self.big_neg)}, "
-            f"extra_big_neg={repr(self.extra_big_neg)})"
+            f"small_top={repr(self.small_top)}, top={repr(self.top)}, "
+            f"big_top={repr(self.big_top)})"
         )
 
     class Meta:
@@ -259,27 +253,19 @@ class EnumFlagTester(EnumFlagTesterBase):
         blank=True,
     )
 
-    small_neg = EnumField(
-        SmallNegativeFlagEnum,
-        default=SmallNegativeFlagEnum(0),
+    small_top = EnumField(
+        SmallTopBitFlagEnum,
+        default=SmallTopBitFlagEnum(0),
         db_index=True,
         blank=True,
     )
 
-    neg = EnumField(
-        NegativeFlagEnum, default=NegativeFlagEnum(0), db_index=True, blank=True
+    top = EnumField(
+        TopBitFlagEnum, default=TopBitFlagEnum(0), db_index=True, blank=True
     )
 
-    big_neg = EnumField(
-        BigNegativeFlagEnum, default=BigNegativeFlagEnum(0), db_index=True, blank=True
-    )
-
-    extra_big_neg = EnumField(
-        ExtraBigNegativeFlagEnum,
-        default=None,
-        db_index=True,
-        blank=True,
-        null=True,
+    big_top = EnumField(
+        BigTopBitFlagEnum, default=BigTopBitFlagEnum(0), db_index=True, blank=True
     )
 
     def __repr__(self):
@@ -288,9 +274,8 @@ class EnumFlagTester(EnumFlagTesterBase):
             f"pos={repr(self.pos)}, "
             f"big_pos={repr(self.big_pos)}, "
             f"extra_big_pos={repr(self.extra_big_pos)}, "
-            f"small_neg={repr(self.small_neg)}, neg={repr(self.neg)}, "
-            f"big_neg={repr(self.big_neg)}, "
-            f"extra_big_neg={repr(self.extra_big_neg)})"
+            f"small_top={repr(self.small_top)}, top={repr(self.top)}, "
+            f"big_top={repr(self.big_top)})"
         )
 
 

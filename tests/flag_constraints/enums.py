@@ -29,3 +29,17 @@ if sys.version_info >= (3, 11):
         VAL1 = 2**12
         VAL2 = 2**13
         VAL3 = 2**14
+
+    class StrictTopBitFlagEnum(Flag, boundary=STRICT):
+        """uses the sign bit of a 16 bit column"""
+
+        VAL1 = 2**13
+        VAL2 = 2**14
+        VAL3 = 2**15
+
+    class StrictBigTopBitFlagEnum(Flag, boundary=STRICT):
+        """uses the sign bit of a 64 bit column"""
+
+        VAL1 = 2**61
+        VAL2 = 2**62
+        VAL3 = 2**63

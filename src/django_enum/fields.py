@@ -7,7 +7,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from datetime import date, datetime, time, timedelta
 from decimal import Decimal, DecimalException
-from enum import CONFORM, EJECT, STRICT, Enum, Flag, IntFlag
+from enum import CONFORM, EJECT, STRICT, Enum, Flag
 from functools import reduce
 from operator import or_
 from typing import Any, ClassVar, Generic, TypeVar, cast, overload
@@ -247,52 +247,64 @@ class EnumFieldFactory(type):
                 for val in values(enum)
                 if val is not None
             )
-            min_bits = (min_value.bit_length(), max_value.bit_length())
-
-            if bit_length is not None:
-                assert lte(min_bits, (bit_length, bit_length)), (
-                    f"bit_length {bit_length} is too small to store all "
-                    f"values of {enum}"
-                )
-                min_bits = (bit_length, bit_length)
-            else:
-                bit_length = max(min_bits)
-
             field_cls: type[EnumField]
-            if min_value < 0:
-                # Its possible to create a flag enum with negative values. This
-                # enum behaves like a regular enum - the bitwise combinations
-                # do not work - these weird flag enums are supported as normal
-                # enumerations with negative values at the DB level
-                if lte(min_bits, (16, 15)):
-                    field_cls = EnumSmallIntegerField
-                elif lte(min_bits, (32, 31)):
-                    field_cls = EnumIntegerField
-                elif lte(min_bits, (64, 63)):
-                    field_cls = EnumBigIntegerField
+            if is_flag:
+                # Flags are bit patterns, not numbers. They are always
+                # non-negative in python and are stored two's complement in a
+                # signed column of the same width - so every bit of the column
+                # is usable, including the sign bit. See FlagField.
+                if min_value < 0:
+                    raise ValueError(
+                        f"{enum} has negative values. Flag enumerations must "
+                        f"only have non-negative values - name the top bit of "
+                        f"an n-bit column as 1 << (n - 1) instead."
+                    )
+                bits = max_value.bit_length()
+                if bit_length is not None:
+                    assert bits <= bit_length, (
+                        f"bit_length {bit_length} is too small to store all "
+                        f"values of {enum}"
+                    )
                 else:
-                    field_cls = EnumExtraBigIntegerField
+                    bit_length = bits
+
+                if bit_length > 64:
+                    field_cls = ExtraBigIntegerFlagField
+                elif bit_length > 32:
+                    field_cls = BigIntegerFlagField
+                elif bit_length > 16:
+                    field_cls = IntegerFlagField
+                else:
+                    field_cls = SmallIntegerFlagField
             else:
-                if min_bits[1] >= 64 and is_flag:
-                    field_cls = (
-                        ExtraBigIntegerFlagField
-                        if is_flag
-                        else EnumExtraBigIntegerField
+                min_bits = (min_value.bit_length(), max_value.bit_length())
+
+                if bit_length is not None:
+                    assert lte(min_bits, (bit_length, bit_length)), (
+                        f"bit_length {bit_length} is too small to store all "
+                        f"values of {enum}"
                     )
-                elif min_bits[1] >= 32:
-                    field_cls = (
-                        BigIntegerFlagField if is_flag else EnumPositiveBigIntegerField
-                    )
-                elif min_bits[1] >= 16:
-                    field_cls = (
-                        IntegerFlagField if is_flag else EnumPositiveIntegerField
-                    )
+                    min_bits = (bit_length, bit_length)
                 else:
-                    field_cls = (
-                        SmallIntegerFlagField
-                        if is_flag
-                        else EnumPositiveSmallIntegerField
-                    )
+                    bit_length = max(min_bits)
+
+                if min_value < 0:
+                    if lte(min_bits, (16, 15)):
+                        field_cls = EnumSmallIntegerField
+                    elif lte(min_bits, (32, 31)):
+                        field_cls = EnumIntegerField
+                    elif lte(min_bits, (64, 63)):
+                        field_cls = EnumBigIntegerField
+                    else:
+                        field_cls = EnumExtraBigIntegerField
+                elif min_bits[1] >= 64:
+                    field_cls = EnumExtraBigIntegerField
+                elif min_bits[1] >= 32:
+                    field_cls = EnumPositiveBigIntegerField
+                elif min_bits[1] >= 16:
+                    field_cls = EnumPositiveIntegerField
+                else:
+                    field_cls = EnumPositiveSmallIntegerField
 
             return field_cls(  # type: ignore[return-value]
                 enum=enum,  # type: ignore[arg-type]
@@ -750,19 +762,7 @@ class EnumField(
         self, cls: type[Model], name: str, private_only: bool = False
     ):
         super().contribute_to_class(cls, name, private_only=private_only)
-        if self.constrained and self.enum and issubclass(self.enum, IntFlag):
-            # It's possible to declare an IntFlag field with negative values -
-            # these enums do not behave has expected and flag-like DB
-            # operations are not supported, so they are treated as normal
-            # IntEnum fields, but the check constraints are flag-like range
-            # constraints, so we bring those in here
-            FlagField.contribute_to_class(
-                self,  # type: ignore
-                cls,
-                name,
-                private_only=private_only,
-            )
-        elif self.constrained and self.enum:
+        if self.constrained and self.enum:
             constraint = Q(
                 **{
                     f"{self.name or name}__in": [
@@ -1175,9 +1175,42 @@ class FlagField(IntEnumField[FlagT], Generic[PrimitiveT, FlagT]):  # type: ignor
     """
     A common base class for EnumFields that store Flag enumerations and
     support bitwise operations.
+
+    Flag values are non-negative bit patterns in python but are stored in a
+    *signed* integer column so that every bit of the column is usable,
+    including the sign bit. The conversion is two's complement at the width
+    of the column (:attr:`db_bit_length`): a python value with the top bit set
+    is written as a negative integer and negative integers read from the
+    database are mapped back to their non-negative flag value. This is
+    transparent to the ORM, lookups (including :ref:`has_any` and
+    :ref:`has_all`) and ``update()`` values are converted automatically.
+
+    .. note::
+
+        Django resolves the type of a bare value inside an
+        :class:`~django.db.models.F` expression from the python value rather
+        than from the field, so a flag with the top bit set must be wrapped
+        when used that way:
+
+        .. code-block:: python
+
+            Model.objects.update(
+                flags=F("flags").bitor(
+                    Value(Flags.TOP, output_field=Model._meta.get_field("flags"))
+                )
+            )
     """
 
     enum: type[FlagT] | None
+
+    _DB_BIT_LENGTHS: ClassVar[dict[str, int]] = {
+        "SmallIntegerField": 16,
+        "PositiveSmallIntegerField": 16,
+        "IntegerField": 32,
+        "PositiveIntegerField": 32,
+        "BigIntegerField": 64,
+        "PositiveBigIntegerField": 64,
+    }
 
     def __init__(
         self,
@@ -1189,6 +1222,82 @@ class FlagField(IntEnumField[FlagT], Generic[PrimitiveT, FlagT]):  # type: ignor
         if enum and default is NOT_PROVIDED:
             default = enum(0)
         super().__init__(enum=enum, default=default, blank=blank, **kwargs)
+        bits = self.db_bit_length
+        if bits:
+            if self.enum:
+                flags = [int(val) for val in values(self.enum) if val is not None]
+                if flags and min(flags) < 0:
+                    raise ValueError(
+                        f"{self.enum} has negative values. Flag enumerations "
+                        f"must only have non-negative values - name the top bit "
+                        f"of an n-bit column as 1 << (n - 1) instead."
+                    )
+                if flags and max(flags).bit_length() > bits:
+                    raise ValueError(
+                        f"{self.enum} requires {max(flags).bit_length()} bits "
+                        f"but {self.__class__.__name__} only has {bits}."
+                    )
+            # the inherited range validators are for the signed column, flags
+            # are validated against the unsigned range of the column
+            self.validators = [
+                *(
+                    validator
+                    for validator in self.validators
+                    if not isinstance(
+                        getattr(validator, "wrapped", validator),
+                        (MinValueValidator, MaxValueValidator),
+                    )
+                ),
+                EnumValidatorAdapter(MinValueValidator(0), self.null),  # type: ignore
+                EnumValidatorAdapter(  # type: ignore
+                    MaxValueValidator((1 << bits) - 1), self.null
+                ),
+            ]
+
+    @cached_property
+    def db_bit_length(self) -> int | None:
+        """
+        The number of bits in the database column, or None if the column is
+        not a fixed width integer.
+        """
+        return self._DB_BIT_LENGTHS.get(self.get_internal_type())
+
+    def _to_signed(self, value: int) -> int:
+        """
+        Two's complement the unsigned flag value into the signed range of the
+        column if its top bit is set.
+        """
+        bits = self.db_bit_length
+        if bits and value >= 1 << (bits - 1):
+            return value - (1 << bits)
+        return value
+
+    def _to_unsigned(self, value: int) -> int:
+        """
+        Map a negative (two's complement) column value back to its
+        non-negative flag value.
+        """
+        bits = self.db_bit_length
+        if bits and -(1 << (bits - 1)) <= value < 0:
+            return value + (1 << bits)
+        return value
+
+    def _try_coerce(self, value: Any, force: bool = False) -> Enum | Any:
+        if isinstance(value, int) and not isinstance(value, Enum) and value < 0:
+            value = self._to_unsigned(value)
+        return super()._try_coerce(value, force=force)
+
+    def get_prep_value(self, value: Any) -> Any:
+        """
+        Convert the value to its flag value and then two's complement it into
+        the signed range of the column.
+
+        See :meth:`django.db.models.Field.get_prep_value`
+        """
+        value = super().get_prep_value(value)
+        if isinstance(value, int) and not isinstance(value, bool):
+            return self._to_signed(int(value))
+        return value
 
     def contribute_to_class(
         self, cls: type[Model], name: str, private_only: bool = False
@@ -1209,14 +1318,22 @@ class FlagField(IntEnumField[FlagT], Generic[PrimitiveT, FlagT]):  # type: ignor
         exceptions and that search behaves as expected.
 
         - KEEP: no constraints
-        - EJECT: constrained to the enum's range if strict is True
-        - CONFORM: constrained to the enum's range. It would be possible to
+        - EJECT: constrained to the enum's bit mask if strict is True
+        - CONFORM: constrained to the enum's bit mask. It would be possible to
             insert and load an out of range value, but that value would not be
             searchable so a constraint is added.
-        - STRICT: constrained to the enum's range
+        - STRICT: constrained to the enum's bit mask
 
+        The constraint is a bit mask check: no bit outside of the enumeration's
+        mask may be set. It is expressed as a negated :ref:`has_any` lookup
+        against the two's complement of the unused bits so that it is valid
+        for values with the sign bit set. The mask is passed as a
+        :class:`~django.db.models.Value` so that it is not coerced to the
+        enumeration type, which allows :meth:`~django.db.models.Model.full_clean`
+        to evaluate the constraint in python.
         """
-        if self.constrained and self.enum and self.bit_length <= 64:
+        bits = self.db_bit_length
+        if self.constrained and self.enum and bits:
             boundary = getattr(self.enum, "_boundary_", None)
             is_conform, is_eject, is_strict = (
                 boundary is CONFORM,
@@ -1225,28 +1342,27 @@ class FlagField(IntEnumField[FlagT], Generic[PrimitiveT, FlagT]):  # type: ignor
             )
 
             flags: list[int] = [
-                self._coerce_to_value_type(val)
+                int(self._coerce_to_value_type(val))
                 for val in values(self.enum)
                 if val is not None
             ]
+            unused_bits = ~reduce(or_, flags, 0) & ((1 << bits) - 1)
 
-            if is_strict or is_conform or (is_eject and self.strict) and flags:
-                constraint = (
-                    Q(**{f"{self.name or name}__gte": min(*flags)})
-                    & Q(**{f"{self.name or name}__lte": reduce(or_, flags)})
-                ) | Q(**{self.name or name: 0})
+            if (is_strict or is_conform or (is_eject and self.strict)) and unused_bits:
+                constraint = ~Q(
+                    **{
+                        f"{self.name or name}__has_any": expressions.Value(
+                            self._to_signed(unused_bits)
+                        )
+                    }
+                )
 
                 if self.null:
                     constraint |= Q(**{f"{self.name or name}__isnull": True})
 
                 cls._meta.constraints = [
                     *cls._meta.constraints,
-                    CheckConstraint(  # type: ignore[call-arg]
-                        check=constraint,  # type: ignore[call-arg]
-                        name=self.constraint_name(cls, self.name or name, self.enum),
-                    )
-                    if django_version[0:2] < (5, 1)
-                    else CheckConstraint(
+                    CheckConstraint(
                         condition=constraint,
                         name=self.constraint_name(cls, self.name or name, self.enum),
                     ),
@@ -1258,15 +1374,13 @@ class FlagField(IntEnumField[FlagT], Generic[PrimitiveT, FlagT]):  # type: ignor
                     "constraints",
                     cls._meta.constraints,
                 )
-        if isinstance(self, FlagField):
-            # this may have been called by a normal EnumField to bring in flag-like constraints
-            # for non flag fields
-            IntegerField.contribute_to_class(
-                self,  # pyright: ignore[reportArgumentType]
-                cls,
-                name,
-                private_only=private_only,
-            )
+        # bypass EnumField.contribute_to_class, its constraints are too specific
+        Field.contribute_to_class(
+            self,  # pyright: ignore[reportArgumentType]
+            cls,
+            name,
+            private_only=private_only,
+        )
 
     def formfield(self, form_class=None, choices_form_class=None, **kwargs):
         """
@@ -1323,36 +1437,33 @@ class FlagField(IntEnumField[FlagT], Generic[PrimitiveT, FlagT]):  # type: ignor
         ]
 
 
+FlagField.register_lookup(HasAnyFlagsLookup)
+FlagField.register_lookup(HasAllFlagsLookup)
+
+
 class SmallIntegerFlagField(
-    FlagField[int, FlagT], EnumPositiveSmallIntegerField[FlagT], Generic[FlagT]
+    FlagField[int, FlagT], EnumSmallIntegerField[FlagT], Generic[FlagT]
 ):
     """
-    A database field supporting flag enumerations with positive integer values
-    that fit into 2 bytes or fewer
+    A database field supporting flag enumerations with up to 16 flags, stored
+    two's complement in a 16 bit column.
     """
 
 
-class IntegerFlagField(
-    FlagField[int, FlagT], EnumPositiveIntegerField[FlagT], Generic[FlagT]
-):
+class IntegerFlagField(FlagField[int, FlagT], EnumIntegerField[FlagT], Generic[FlagT]):
     """
-    A database field supporting flag enumerations with positive integer values
-    that fit into 32 bytes or fewer
+    A database field supporting flag enumerations with up to 32 flags, stored
+    two's complement in a 32 bit column.
     """
 
 
 class BigIntegerFlagField(
-    FlagField[int, FlagT], EnumPositiveBigIntegerField[FlagT], Generic[FlagT]
+    FlagField[int, FlagT], EnumBigIntegerField[FlagT], Generic[FlagT]
 ):
     """
-    A database field supporting flag enumerations with integer values that fit
-    into 64 bytes or fewer
+    A database field supporting flag enumerations with up to 64 flags, stored
+    two's complement in a 64 bit column.
     """
-
-
-for field in [SmallIntegerFlagField, IntegerFlagField, BigIntegerFlagField]:
-    field.register_lookup(HasAnyFlagsLookup)
-    field.register_lookup(HasAllFlagsLookup)
 
 
 class EnumExtraBigIntegerField(IntEnumField[FlagT], BinaryField, Generic[FlagT]):
@@ -1442,6 +1553,15 @@ class ExtraBigIntegerFlagField(
 
     def contribute_to_class(self, cls, name, private_only: bool = False):
         BinaryField.contribute_to_class(self, cls, name, private_only=private_only)
+
+    def get_lookup(self, lookup_name):
+        # bitwise lookups are not supported on binary columns
+        if lookup_name in {
+            HasAnyFlagsLookup.lookup_name,
+            HasAllFlagsLookup.lookup_name,
+        }:
+            return None
+        return super().get_lookup(lookup_name)
 
 
 # ExtraBigIntegerFlagField.register_lookup(HasAnyFlagsExtraBigLookup)

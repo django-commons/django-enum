@@ -286,42 +286,33 @@ class ExtraBigPositiveFlagEnum(IntFlag):
     FIVE = 2**65
 
 
-# its possible to make negative valued flag enums, but the bitwise operations
-# do not really work. We test them because they may be seen in the wild. At
-# the DB level they behave like normal enumerations with a flag enumeration's
-# check constraint by range instead of by value
+# flag enumerations that use the top (sign) bit of their column. These are
+# stored two's complement, FIVE is written to the database as a negative
+# integer.
 
 
-class SmallNegativeFlagEnum(IntFlag):
-    ONE = -(2**11)
-    TWO = -(2**12)
-    THREE = -(2**13)
-    FOUR = -(2**14)
-    FIVE = -(2**15)
+class SmallTopBitFlagEnum(IntFlag):
+    ONE = 2**11
+    TWO = 2**12
+    THREE = 2**13
+    FOUR = 2**14
+    FIVE = 2**15
 
 
-class NegativeFlagEnum(IntFlag):
-    ONE = -(2**27)
-    TWO = -(2**28)
-    THREE = -(2**29)
-    FOUR = -(2**30)
-    FIVE = -(2**31)
+class TopBitFlagEnum(IntFlag):
+    ONE = 2**27
+    TWO = 2**28
+    THREE = 2**29
+    FOUR = 2**30
+    FIVE = 2**31
 
 
-class BigNegativeFlagEnum(IntFlag):
-    ONE = -(2**59)
-    TWO = -(2**60)
-    THREE = -(2**61)
-    FOUR = -(2**62)
-    FIVE = -(2**63)
-
-
-class ExtraBigNegativeFlagEnum(IntFlag):
-    ONE = -(2**0)
-    TWO = -(2**1)
-    THREE = -(2**64)
-    FOUR = -(2**65)
-    FIVE = -(2**66)
+class BigTopBitFlagEnum(IntFlag):
+    ONE = 2**59
+    TWO = 2**60
+    THREE = 2**61
+    FOUR = 2**62
+    FIVE = 2**63
 
 
 class MultiPrimitiveEnum(Enum):
